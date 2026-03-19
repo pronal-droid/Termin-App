@@ -27,7 +27,7 @@
   .nav-tab.active { font-weight: 500; color: #fff; background: #2c2c2e; }
   .nav-tab.settings-tab { flex: 0 0 44px; }
   .content { flex: 1; padding: 0 16px 24px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-
+ 
   .aufnahme { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 420px; gap: 20px; }
   .aufnahme-text { font-size: 15px; color: #888; text-align: center; line-height: 1.6; white-space: pre-line; }
   .mic-btn {
@@ -45,12 +45,13 @@
   .status { font-size: 13px; color: #555; text-align: center; line-height: 1.4; padding: 0 10px; }
   .status.processing { color: #4a7aff; }
   .status.error { color: #e24b4a; }
+  .status.success { color: #34a853; }
   .transcript-box {
     width: 100%; background: #1c1c1e; border-radius: 12px; padding: 14px;
     font-size: 14px; color: #ccc; line-height: 1.5; max-height: 120px; overflow-y: auto;
   }
   .transcript-label { font-size: 11px; color: #555; margin-bottom: 6px; }
-
+ 
   .fallback-box { width: 100%; display: flex; flex-direction: column; gap: 8px; }
   .fallback-box textarea {
     width: 100%; background: #1c1c1e; border: 1px solid #3a3a3c; border-radius: 12px;
@@ -59,14 +60,14 @@
   }
   .fallback-box textarea:focus { border-color: #4a7aff; }
   .fallback-box textarea::placeholder { color: #555; }
-
+ 
   .pending-list { width: 100%; display: flex; flex-direction: column; gap: 8px; }
   .pending-label { font-size: 12px; color: #888; margin-bottom: 2px; }
   .pending-card { background: #1c1c1e; border-radius: 12px; padding: 10px 14px; border-left: 3px solid #4a7aff; }
   .pending-title { font-size: 14px; font-weight: 500; }
   .pending-sub { font-size: 12px; color: #888; margin-top: 2px; }
   .btn-row { display: flex; gap: 10px; margin-top: 8px; }
-
+ 
   .termine-list { display: flex; flex-direction: column; gap: 10px; }
   .empty-state { text-align: center; color: #555; padding: 80px 20px; font-size: 14px; white-space: pre-line; }
   .termin-card {
@@ -78,19 +79,20 @@
   .termin-date { font-size: 12px; color: #888; margin-top: 3px; }
   .termin-ort { font-size: 11px; color: #666; margin-top: 2px; }
   .termin-notiz { font-size: 11px; color: #555; margin-top: 2px; font-style: italic; }
+  .termin-synced { font-size: 10px; color: #34a853; margin-top: 3px; display: flex; align-items: center; gap: 4px; }
   .termin-actions { display: flex; gap: 10px; margin-left: 8px; flex-shrink: 0; }
   .icon-btn { cursor: pointer; padding: 4px; background: none; border: none; }
-
+ 
   .edit-card { background: #1c1c1e; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
   .edit-row { display: flex; gap: 8px; }
-  input[type="text"], input[type="date"], input[type="time"], input[type="password"] {
+  input[type="text"], input[type="date"], input[type="time"], input[type="password"], input[type="url"] {
     background: #2c2c2e; border: 1px solid #3a3a3c; border-radius: 8px;
     padding: 8px 12px; font-size: 14px; color: #fff; outline: none; width: 100%;
   }
   input:focus { border-color: #4a7aff; }
   input[type="date"]::-webkit-calendar-picker-indicator,
   input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1); }
-
+ 
   .btn {
     border: none; border-radius: 8px; padding: 10px 20px; font-size: 13px;
     font-weight: 500; color: #fff; cursor: pointer; transition: opacity 0.2s;
@@ -98,12 +100,17 @@
   .btn:active { opacity: 0.8; }
   .btn-primary { background: #4a7aff; }
   .btn-secondary { background: #555; }
+  .btn-google {
+    background: #fff; color: #333; display: flex; align-items: center; justify-content: center;
+    gap: 8px; font-weight: 500; border: 1px solid #ddd;
+  }
+  .btn-google:active { background: #f0f0f0; }
   .btn-danger { background: #e24b4a; }
   .btn-export {
     background: #4a7aff; width: 100%; margin-bottom: 6px;
     display: flex; align-items: center; justify-content: center; gap: 6px;
   }
-
+ 
   .settings-title { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
   .settings-section-title { font-size: 13px; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
   .setting-row {
@@ -128,35 +135,40 @@
   }
   .toggle.on .toggle-knob { left: 20px; }
   .toggle.off .toggle-knob { left: 2px; }
-
+ 
   .cal-selector { display: flex; gap: 8px; }
   .cal-option {
     flex: 1; padding: 10px 8px; background: #2c2c2e; border: 2px solid transparent;
     border-radius: 10px; cursor: pointer; text-align: center; transition: all 0.2s;
   }
   .cal-option.active { border-color: #4a7aff; background: #1a2a4a; }
-  .cal-option-icon { font-size: 24px; margin-bottom: 4px; }
-  .cal-option-label { font-size: 12px; color: #aaa; }
+  .cal-option-label { font-size: 12px; color: #aaa; margin-top: 4px; }
   .cal-option.active .cal-option-label { color: #fff; }
-
+ 
+  .google-account-box {
+    background: #1a2a1a; border: 1px solid #2a4a2a; border-radius: 10px;
+    padding: 12px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .google-account-info { display: flex; align-items: center; gap: 10px; }
+  .google-avatar { width: 32px; height: 32px; border-radius: 50%; background: #34a853; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; }
+ 
   .api-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; margin-top: 4px; }
   .api-dot { width: 8px; height: 8px; border-radius: 50%; }
   .api-dot.green { background: #34a853; }
   .api-dot.red { background: #e24b4a; }
   .api-dot.gray { background: #555; }
-
+ 
   .divider { height: 1px; background: #2c2c2e; margin: 8px 0; }
   .settings-info { font-size: 12px; color: #555; line-height: 1.5; }
   .tab-content { display: none; }
   .tab-content.active { display: block; }
-
+ 
   .mic-permission-banner {
     width: 100%; background: #1c1c1e; border-radius: 12px; padding: 14px;
     display: flex; flex-direction: column; gap: 10px; align-items: center;
   }
   .mic-permission-banner p { font-size: 13px; color: #888; text-align: center; line-height: 1.5; }
-
-  /* API key setup banner on Aufnahme tab */
+ 
   .setup-banner {
     width: 100%; background: #2a1a0a; border: 1px solid #4a3520; border-radius: 12px;
     padding: 14px; text-align: center;
@@ -165,33 +177,32 @@
 </style>
 </head>
 <body>
-
+ 
 <div class="header"><span>Termin-App</span></div>
-
+ 
 <div class="nav">
   <button class="nav-tab active" data-tab="aufnahme">Aufnahme</button>
   <button class="nav-tab" data-tab="termine">Termine</button>
   <button class="nav-tab settings-tab" data-tab="settings">⚙</button>
 </div>
-
+ 
 <div class="content">
   <!-- AUFNAHME TAB -->
   <div id="tab-aufnahme" class="tab-content active">
     <div class="aufnahme">
-      <!-- Setup needed banner -->
       <div class="setup-banner" id="setup-banner" style="display:none">
-        <p>Bitte gib zuerst deinen API-Key und Worker-URL in den Einstellungen (⚙) ein.</p>
+        <p>Bitte richte zuerst die Verbindungen in den Einstellungen (⚙) ein.</p>
         <button class="btn btn-primary" onclick="switchTab('settings')">Zu den Einstellungen</button>
       </div>
-
+ 
       <div class="mic-permission-banner" id="mic-permission-banner" style="display:none">
         <p>Die App braucht Zugriff auf dein Mikrofon.</p>
         <button class="btn btn-primary" onclick="requestMicPermission()">Mikrofon erlauben</button>
       </div>
-
+ 
       <div class="aufnahme-text" id="aufnahme-text">Tippe auf das Mikrofon
 und erzähl mir von deinem Termin</div>
-
+ 
       <button class="mic-btn" id="mic-btn" onclick="toggleRecording()">
         <svg id="mic-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="9" y="1" width="6" height="11" rx="3"/><path d="M19 10v1a7 7 0 01-14 0v-1"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
@@ -200,20 +211,20 @@ und erzähl mir von deinem Termin</div>
           <rect x="6" y="6" width="12" height="12" rx="2"/>
         </svg>
       </button>
-
+ 
       <div class="status" id="status">Bereit</div>
-
+ 
       <div class="transcript-box" id="transcript-box" style="display:none">
         <div class="transcript-label">Erkannter Text:</div>
         <div id="transcript-text"></div>
       </div>
-
+ 
       <div class="fallback-box" id="fallback-box" style="display:none">
         <div style="font-size:12px;color:#888;">Mikrofon nicht verfügbar – Text eingeben:</div>
         <textarea id="fallback-textarea" placeholder="z.B. Zahnarzt nächsten Dienstag um 14 Uhr bei Dr. Müller"></textarea>
         <button class="btn btn-primary" onclick="submitFallbackText()" style="align-self:flex-end;">Termin erkennen</button>
       </div>
-
+ 
       <div class="pending-list" id="pending-list" style="display:none">
         <div class="pending-label">Erkannte Termine:</div>
         <div id="pending-cards"></div>
@@ -224,106 +235,137 @@ und erzähl mir von deinem Termin</div>
       </div>
     </div>
   </div>
-
+ 
   <!-- TERMINE TAB -->
   <div id="tab-termine" class="tab-content">
     <div class="termine-list" id="termine-list"></div>
   </div>
-
+ 
   <!-- SETTINGS TAB -->
   <div id="tab-settings" class="tab-content">
     <div style="display:flex;flex-direction:column;gap:16px;padding-top:8px;">
       <div class="settings-title">Einstellungen</div>
-
-      <!-- API Key Section -->
-      <div class="settings-section-title">API-Verbindung</div>
+ 
+      <!-- Google Calendar Connection -->
+      <div class="settings-section-title">Google Kalender</div>
+      <div class="setting-block" id="google-section">
+        <div id="google-logged-out">
+          <div class="setting-label" style="margin-bottom:6px;">Mit Google anmelden</div>
+          <div class="setting-desc" style="margin-bottom:10px;">Verbindet die App direkt mit deinem Google Kalender. Termine werden automatisch erstellt.</div>
+          <button class="btn btn-google" onclick="googleLogin()">
+            <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#34A853" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#FBBC05" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            Mit Google anmelden
+          </button>
+        </div>
+        <div id="google-logged-in" style="display:none;">
+          <div class="google-account-box">
+            <div class="google-account-info">
+              <div class="google-avatar" id="google-avatar">?</div>
+              <div>
+                <div style="font-size:13px;font-weight:500;" id="google-name">–</div>
+                <div style="font-size:11px;color:#888;" id="google-email">–</div>
+              </div>
+            </div>
+            <button class="btn btn-secondary" onclick="googleLogout()" style="padding:6px 12px;font-size:12px;">Abmelden</button>
+          </div>
+          <div class="api-status" style="margin-top:8px;">
+            <div class="api-dot green"></div>
+            <span style="color:#34a853;">Verbunden mit Google Kalender</span>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="setting-block">
+        <div class="setting-label">Google Client-ID</div>
+        <div class="setting-desc">Von der Google Cloud Console (siehe Anleitung unten).</div>
+        <input type="text" id="input-google-client-id" placeholder="xxxxxxxx.apps.googleusercontent.com" oninput="saveAllSettings()">
+      </div>
+ 
+      <div class="divider"></div>
+ 
+      <!-- AI Connection -->
+      <div class="settings-section-title">KI-Verbindung</div>
       <div class="setting-block">
         <div class="setting-label">Anthropic API-Key</div>
-        <div class="setting-desc">Dein Key wird nur lokal auf diesem Gerät gespeichert.</div>
-        <input type="password" id="input-apikey" placeholder="sk-ant-..." oninput="saveApiSettings()">
+        <div class="setting-desc">Wird nur lokal auf diesem Gerät gespeichert.</div>
+        <input type="password" id="input-apikey" placeholder="sk-ant-..." oninput="saveAllSettings()">
         <div class="api-status" id="apikey-status">
-          <div class="api-dot gray"></div>
-          <span style="color:#666">Noch nicht eingerichtet</span>
+          <div class="api-dot gray"></div><span style="color:#666">Nicht eingerichtet</span>
         </div>
       </div>
-
+ 
       <div class="setting-block">
         <div class="setting-label">Worker-URL</div>
-        <div class="setting-desc">Deine Cloudflare Worker URL (siehe Anleitung unten).</div>
-        <input type="text" id="input-worker-url" placeholder="https://termin-proxy.DEIN-NAME.workers.dev" oninput="saveApiSettings()">
+        <div class="setting-desc">Deine Cloudflare Worker URL.</div>
+        <input type="url" id="input-worker-url" placeholder="https://termin-proxy.xxx.workers.dev" oninput="saveAllSettings()">
         <div class="api-status" id="worker-status">
-          <div class="api-dot gray"></div>
-          <span style="color:#666">Noch nicht eingerichtet</span>
+          <div class="api-dot gray"></div><span style="color:#666">Nicht eingerichtet</span>
         </div>
       </div>
-
-      <button class="btn btn-primary" onclick="testConnection()" style="align-self:flex-start;">Verbindung testen</button>
-
+ 
+      <button class="btn btn-primary" onclick="testConnection()" style="align-self:flex-start;">KI-Verbindung testen</button>
+ 
       <div class="divider"></div>
-
-      <!-- Calendar choice -->
-      <div class="settings-section-title">Kalender</div>
+ 
+      <!-- Calendar mode -->
+      <div class="settings-section-title">Kalender-Modus</div>
       <div style="background:#1c1c1e;border-radius:12px;padding:14px 16px;">
-        <div class="setting-label" style="margin-bottom:10px;">Kalender-App</div>
         <div class="cal-selector">
-          <div class="cal-option active" id="cal-apple" onclick="setCalendar('apple')">
-            <div class="cal-option-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-            </div>
-            <div class="cal-option-label">Apple Kalender</div>
-          </div>
           <div class="cal-option" id="cal-google" onclick="setCalendar('google')">
-            <div class="cal-option-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="4" width="18" height="18" rx="2" stroke="#4285f4" stroke-width="1.5"/>
-                <line x1="16" y1="2" x2="16" y2="6" stroke="#ea4335" stroke-width="1.5"/>
-                <line x1="8" y1="2" x2="8" y2="6" stroke="#34a853" stroke-width="1.5"/>
-                <line x1="3" y1="10" x2="21" y2="10" stroke="#fbbc05" stroke-width="1.5"/>
-              </svg>
-            </div>
-            <div class="cal-option-label">Google Kalender</div>
+            <svg width="28" height="28" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#34A853" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#FBBC05" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            <div class="cal-option-label">Google Kalender<br><span style="font-size:10px;color:#34a853;">Automatisch</span></div>
+          </div>
+          <div class="cal-option" id="cal-apple" onclick="setCalendar('apple')">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <div class="cal-option-label">Apple Kalender<br><span style="font-size:10px;color:#888;">.ics Export</span></div>
           </div>
         </div>
       </div>
-
+ 
       <div class="divider"></div>
       <div class="settings-section-title">Verhalten</div>
-
+ 
       <div class="setting-row">
         <div>
           <div class="setting-label">Termine vorher bestätigen</div>
           <div class="setting-desc">Zeigt erkannte Termine zur Bestätigung an</div>
         </div>
-        <button class="toggle on" id="toggle-confirm" onclick="toggleSetting('confirmBefore')">
-          <div class="toggle-knob"></div>
-        </button>
+        <button class="toggle on" id="toggle-confirm" onclick="toggleSetting('confirmBefore')"><div class="toggle-knob"></div></button>
       </div>
-
+ 
       <div class="setting-row">
         <div>
           <div class="setting-label">Termine vorlesen</div>
           <div class="setting-desc">Liest erkannte Termine laut vor</div>
         </div>
-        <button class="toggle off" id="toggle-readback" onclick="toggleSetting('readBack')">
-          <div class="toggle-knob"></div>
-        </button>
+        <button class="toggle off" id="toggle-readback" onclick="toggleSetting('readBack')"><div class="toggle-knob"></div></button>
       </div>
-
+ 
       <div class="divider"></div>
       <div class="settings-info">
-        <b>Einrichtung – so geht's:</b><br><br>
-        <b>1. API-Key:</b> Geh zu <a href="https://console.anthropic.com" target="_blank" style="color:#4a7aff;">console.anthropic.com</a>, erstelle einen Account und generiere unter "API Keys" einen neuen Key.<br><br>
-        <b>2. Cloudflare Worker:</b> Geh zu <a href="https://dash.cloudflare.com" target="_blank" style="color:#4a7aff;">dash.cloudflare.com</a>, erstelle einen kostenlosen Account und folge der Anleitung in der worker.js Datei.<br><br>
-        <b>Apple Kalender:</b> Exportiert als .ics-Datei.<br>
-        <b>Google Kalender:</b> Öffnet direkt Google Calendar.
+        <b>Google Cloud Einrichtung:</b><br>
+        1. Geh zu <a href="https://console.cloud.google.com" target="_blank" style="color:#4a7aff;">console.cloud.google.com</a><br>
+        2. Erstelle ein neues Projekt (z.B. "Termin-App")<br>
+        3. Geh zu "APIs & Services" → "Library" → suche "Google Calendar API" → Aktivieren<br>
+        4. Geh zu "APIs & Services" → "Credentials" → "Create Credentials" → "OAuth client ID"<br>
+        5. Application type: "Web application"<br>
+        6. Bei "Authorized JavaScript origins" deine GitHub Pages URL eintragen (z.B. https://DEIN-NAME.github.io)<br>
+        7. Bei "Authorized redirect URIs" auch deine GitHub Pages URL eintragen<br>
+        8. Client-ID kopieren und oben einfügen<br>
+        9. Geh zu "OAuth consent screen" → "Test users" → füge deine eigene Gmail-Adresse hinzu<br><br>
+        <b>Wichtig:</b> Solange die App im "Testing"-Modus ist, können sich nur die eingetragenen Test-User anmelden.
       </div>
     </div>
   </div>
 </div>
-
+ 
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+ 
 <script>
+// ==================== STATE ====================
 let termine = JSON.parse(localStorage.getItem('termine') || '[]');
 let pendingTermine = [];
 let isRecording = false;
@@ -331,73 +373,227 @@ let recognition = null;
 let transcript = '';
 let finalTranscript = '';
 let idCounter = parseInt(localStorage.getItem('idCounter') || '1');
-let settings = JSON.parse(localStorage.getItem('settings') || '{"confirmBefore":true,"readBack":false,"calendar":"apple","apiKey":"","workerUrl":""}');
+let settings = JSON.parse(localStorage.getItem('settings') || '{}');
+// Defaults
+if (!settings.confirmBefore && settings.confirmBefore !== false) settings.confirmBefore = true;
+if (!settings.readBack) settings.readBack = false;
+if (!settings.calendar) settings.calendar = 'google';
+if (!settings.apiKey) settings.apiKey = '';
+if (!settings.workerUrl) settings.workerUrl = '';
+if (!settings.googleClientId) settings.googleClientId = '';
+ 
 let micAvailable = null;
 let speechApiAvailable = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
-
+ 
+// Google Auth state
+let googleAccessToken = localStorage.getItem('googleAccessToken') || '';
+let googleTokenExpiry = parseInt(localStorage.getItem('googleTokenExpiry') || '0');
+let googleUserName = localStorage.getItem('googleUserName') || '';
+let googleUserEmail = localStorage.getItem('googleUserEmail') || '';
+let tokenClient = null;
+ 
+// ==================== INIT ====================
 document.addEventListener('DOMContentLoaded', () => {
+  loadAllSettings();
   initSettings();
-  loadApiSettings();
   checkMicPermission();
   checkSetup();
+  updateGoogleUI();
 });
-
+ 
 // ==================== TABS ====================
 document.querySelectorAll('.nav-tab').forEach(tab => {
   tab.addEventListener('click', () => switchTab(tab.dataset.tab));
 });
-
-function switchTab(tabName) {
+ 
+function switchTab(name) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelector(`.nav-tab[data-tab="${tabName}"]`).classList.add('active');
-  document.getElementById('tab-' + tabName).classList.add('active');
-  if (tabName === 'termine') renderTermine();
-  if (tabName === 'aufnahme') checkSetup();
+  document.querySelector(`.nav-tab[data-tab="${name}"]`).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'termine') renderTermine();
+  if (name === 'aufnahme') checkSetup();
 }
-
-// ==================== SETUP CHECK ====================
+ 
 function checkSetup() {
   const banner = document.getElementById('setup-banner');
-  if (!settings.apiKey || !settings.workerUrl) {
-    banner.style.display = 'block';
-  } else {
-    banner.style.display = 'none';
-  }
+  const needsApi = !settings.apiKey || !settings.workerUrl;
+  const needsGoogle = settings.calendar === 'google' && (!settings.googleClientId || !googleAccessToken);
+  if (needsApi) { banner.style.display = 'block'; }
+  else { banner.style.display = 'none'; }
 }
-
-// ==================== MIC PERMISSION ====================
-async function checkMicPermission() {
-  if (!speechApiAvailable) {
-    showFallback('Dein Browser unterstützt keine Spracherkennung. Nutze das Textfeld.');
+ 
+// ==================== GOOGLE AUTH ====================
+function initGoogleAuth() {
+  if (!settings.googleClientId || typeof google === 'undefined') return;
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: settings.googleClientId,
+    scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+    callback: handleGoogleToken,
+  });
+}
+ 
+function googleLogin() {
+  if (!settings.googleClientId) {
+    alert('Bitte erst die Google Client-ID in den Einstellungen eingeben.');
     return;
   }
+  if (!tokenClient) initGoogleAuth();
+  if (!tokenClient) {
+    alert('Google-Anmeldung konnte nicht geladen werden. Bitte Seite neu laden.');
+    return;
+  }
+  tokenClient.requestAccessToken();
+}
+ 
+async function handleGoogleToken(response) {
+  if (response.error) {
+    console.error('Google auth error:', response);
+    alert('Google-Anmeldung fehlgeschlagen: ' + (response.error_description || response.error));
+    return;
+  }
+  googleAccessToken = response.access_token;
+  googleTokenExpiry = Date.now() + (response.expires_in * 1000);
+  localStorage.setItem('googleAccessToken', googleAccessToken);
+  localStorage.setItem('googleTokenExpiry', googleTokenExpiry.toString());
+ 
+  // Fetch user info
+  try {
+    const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: { 'Authorization': 'Bearer ' + googleAccessToken }
+    });
+    const data = await res.json();
+    googleUserName = data.name || data.email || 'Google User';
+    googleUserEmail = data.email || '';
+    localStorage.setItem('googleUserName', googleUserName);
+    localStorage.setItem('googleUserEmail', googleUserEmail);
+  } catch(e) { console.error('User info fetch failed:', e); }
+ 
+  updateGoogleUI();
+  checkSetup();
+}
+ 
+function googleLogout() {
+  if (googleAccessToken && typeof google !== 'undefined') {
+    try { google.accounts.oauth2.revoke(googleAccessToken); } catch(e) {}
+  }
+  googleAccessToken = '';
+  googleTokenExpiry = 0;
+  googleUserName = '';
+  googleUserEmail = '';
+  localStorage.removeItem('googleAccessToken');
+  localStorage.removeItem('googleTokenExpiry');
+  localStorage.removeItem('googleUserName');
+  localStorage.removeItem('googleUserEmail');
+  updateGoogleUI();
+}
+ 
+function updateGoogleUI() {
+  const isLoggedIn = googleAccessToken && Date.now() < googleTokenExpiry;
+  document.getElementById('google-logged-out').style.display = isLoggedIn ? 'none' : 'block';
+  document.getElementById('google-logged-in').style.display = isLoggedIn ? 'block' : 'none';
+  if (isLoggedIn) {
+    document.getElementById('google-name').textContent = googleUserName;
+    document.getElementById('google-email').textContent = googleUserEmail;
+    document.getElementById('google-avatar').textContent = (googleUserName || '?')[0].toUpperCase();
+  }
+}
+ 
+async function ensureGoogleToken() {
+  if (!googleAccessToken || Date.now() >= googleTokenExpiry) {
+    return new Promise((resolve, reject) => {
+      if (!tokenClient) initGoogleAuth();
+      if (!tokenClient) { reject(new Error('Google nicht konfiguriert')); return; }
+      const origCallback = tokenClient.callback;
+      tokenClient.callback = (resp) => {
+        handleGoogleToken(resp);
+        if (resp.error) reject(new Error(resp.error));
+        else resolve();
+      };
+      tokenClient.requestAccessToken();
+    });
+  }
+}
+ 
+// ==================== GOOGLE CALENDAR API ====================
+async function createGoogleEvent(termin) {
+  await ensureGoogleToken();
+  const start = new Date(termin.datum + 'T' + termin.uhrzeit + ':00');
+  const end = new Date(start.getTime() + 3600000);
+  const event = {
+    summary: termin.titel,
+    location: termin.ort || undefined,
+    description: termin.notiz || undefined,
+    start: { dateTime: start.toISOString(), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+    end: { dateTime: end.toISOString(), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+    reminders: { useDefault: false, overrides: [{ method: 'popup', minutes: 15 }] }
+  };
+ 
+  const res = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + googleAccessToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify(event)
+  });
+  if (!res.ok) throw new Error('Google Calendar Fehler: ' + res.status);
+  const data = await res.json();
+  return data.id; // Google Event ID
+}
+ 
+async function updateGoogleEvent(termin) {
+  if (!termin.googleEventId) return;
+  await ensureGoogleToken();
+  const start = new Date(termin.datum + 'T' + termin.uhrzeit + ':00');
+  const end = new Date(start.getTime() + 3600000);
+  const event = {
+    summary: termin.titel,
+    location: termin.ort || undefined,
+    description: termin.notiz || undefined,
+    start: { dateTime: start.toISOString(), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+    end: { dateTime: end.toISOString(), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+    reminders: { useDefault: false, overrides: [{ method: 'popup', minutes: 15 }] }
+  };
+ 
+  await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events/' + termin.googleEventId, {
+    method: 'PUT',
+    headers: { 'Authorization': 'Bearer ' + googleAccessToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify(event)
+  });
+}
+ 
+async function deleteGoogleEvent(termin) {
+  if (!termin.googleEventId) return;
+  await ensureGoogleToken();
+  await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events/' + termin.googleEventId, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + googleAccessToken }
+  });
+}
+ 
+// ==================== MIC PERMISSION ====================
+async function checkMicPermission() {
+  if (!speechApiAvailable) { showFallback('Spracherkennung nicht unterstützt.'); return; }
   if (navigator.permissions && navigator.permissions.query) {
     try {
-      const result = await navigator.permissions.query({ name: 'microphone' });
-      if (result.state === 'granted') { micAvailable = true; hideBanner(); }
-      else if (result.state === 'denied') { micAvailable = false; showFallback('Mikrofon blockiert.'); }
-      else { showBanner(); }
-      result.addEventListener('change', () => {
-        if (result.state === 'granted') { micAvailable = true; hideBanner(); }
-        else if (result.state === 'denied') { micAvailable = false; showFallback('Mikrofon blockiert.'); }
+      const r = await navigator.permissions.query({ name: 'microphone' });
+      if (r.state === 'granted') { micAvailable = true; hideBanner(); }
+      else if (r.state === 'denied') { micAvailable = false; showFallback('Mikrofon blockiert.'); }
+      else showBanner();
+      r.addEventListener('change', () => {
+        if (r.state === 'granted') { micAvailable = true; hideBanner(); }
+        else if (r.state === 'denied') { micAvailable = false; showFallback('Mikrofon blockiert.'); }
       });
-    } catch(e) { micAvailable = null; }
+    } catch(e) {}
   }
 }
-
+ 
 async function requestMicPermission() {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    stream.getTracks().forEach(t => t.stop());
-    micAvailable = true; hideBanner();
-    setStatus('Mikrofon erlaubt!', false);
-  } catch(e) {
-    micAvailable = false;
-    showFallback('Mikrofon verweigert. Nutze das Textfeld.');
-  }
+    const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+    s.getTracks().forEach(t => t.stop());
+    micAvailable = true; hideBanner(); setStatus('Mikrofon erlaubt!', false);
+  } catch(e) { micAvailable = false; showFallback('Mikrofon verweigert.'); }
 }
-
+ 
 function showBanner() { document.getElementById('mic-permission-banner').style.display = 'flex'; }
 function hideBanner() {
   document.getElementById('mic-permission-banner').style.display = 'none';
@@ -410,80 +606,62 @@ function showFallback(msg) {
   document.getElementById('mic-btn').classList.add('disabled');
   if (msg) setStatus(msg, false, true);
 }
-
+ 
 // ==================== SETTINGS ====================
+function loadAllSettings() {
+  document.getElementById('input-apikey').value = settings.apiKey || '';
+  document.getElementById('input-worker-url').value = settings.workerUrl || '';
+  document.getElementById('input-google-client-id').value = settings.googleClientId || '';
+  updateApiStatus();
+}
+ 
+function saveAllSettings() {
+  settings.apiKey = document.getElementById('input-apikey').value.trim();
+  settings.workerUrl = document.getElementById('input-worker-url').value.trim().replace(/\/$/,'');
+  settings.googleClientId = document.getElementById('input-google-client-id').value.trim();
+  localStorage.setItem('settings', JSON.stringify(settings));
+  updateApiStatus();
+  checkSetup();
+  // Re-init Google auth if client ID changed
+  tokenClient = null;
+  if (settings.googleClientId) initGoogleAuth();
+}
+ 
 function initSettings() {
   document.getElementById('toggle-confirm').className = 'toggle ' + (settings.confirmBefore ? 'on' : 'off');
   document.getElementById('toggle-readback').className = 'toggle ' + (settings.readBack ? 'on' : 'off');
   document.getElementById('cal-apple').classList.toggle('active', settings.calendar === 'apple');
   document.getElementById('cal-google').classList.toggle('active', settings.calendar === 'google');
 }
-
-function loadApiSettings() {
-  document.getElementById('input-apikey').value = settings.apiKey || '';
-  document.getElementById('input-worker-url').value = settings.workerUrl || '';
-  updateApiStatus();
-}
-
-function saveApiSettings() {
-  settings.apiKey = document.getElementById('input-apikey').value.trim();
-  settings.workerUrl = document.getElementById('input-worker-url').value.trim();
-  // Remove trailing slash
-  if (settings.workerUrl.endsWith('/')) settings.workerUrl = settings.workerUrl.slice(0, -1);
-  localStorage.setItem('settings', JSON.stringify(settings));
-  updateApiStatus();
-  checkSetup();
-}
-
+ 
 function updateApiStatus() {
-  const keyEl = document.getElementById('apikey-status');
-  const urlEl = document.getElementById('worker-status');
-  if (settings.apiKey && settings.apiKey.startsWith('sk-')) {
-    keyEl.innerHTML = '<div class="api-dot green"></div><span style="color:#34a853">Key gespeichert</span>';
-  } else if (settings.apiKey) {
-    keyEl.innerHTML = '<div class="api-dot red"></div><span style="color:#e24b4a">Key sollte mit sk- beginnen</span>';
-  } else {
-    keyEl.innerHTML = '<div class="api-dot gray"></div><span style="color:#666">Noch nicht eingerichtet</span>';
-  }
-  if (settings.workerUrl && settings.workerUrl.startsWith('https://')) {
-    urlEl.innerHTML = '<div class="api-dot green"></div><span style="color:#34a853">URL gespeichert</span>';
-  } else if (settings.workerUrl) {
-    urlEl.innerHTML = '<div class="api-dot red"></div><span style="color:#e24b4a">URL muss mit https:// beginnen</span>';
-  } else {
-    urlEl.innerHTML = '<div class="api-dot gray"></div><span style="color:#666">Noch nicht eingerichtet</span>';
-  }
+  const k = document.getElementById('apikey-status');
+  const u = document.getElementById('worker-status');
+  k.innerHTML = settings.apiKey && settings.apiKey.startsWith('sk-')
+    ? '<div class="api-dot green"></div><span style="color:#34a853">Gespeichert</span>'
+    : settings.apiKey
+      ? '<div class="api-dot red"></div><span style="color:#e24b4a">Sollte mit sk- beginnen</span>'
+      : '<div class="api-dot gray"></div><span style="color:#666">Nicht eingerichtet</span>';
+  u.innerHTML = settings.workerUrl && settings.workerUrl.startsWith('https://')
+    ? '<div class="api-dot green"></div><span style="color:#34a853">Gespeichert</span>'
+    : settings.workerUrl
+      ? '<div class="api-dot red"></div><span style="color:#e24b4a">Muss mit https:// beginnen</span>'
+      : '<div class="api-dot gray"></div><span style="color:#666">Nicht eingerichtet</span>';
 }
-
+ 
 async function testConnection() {
-  if (!settings.apiKey || !settings.workerUrl) {
-    alert('Bitte erst API-Key und Worker-URL eingeben.');
-    return;
-  }
+  if (!settings.apiKey || !settings.workerUrl) { alert('Erst API-Key und Worker-URL eingeben.'); return; }
   try {
-    const resp = await fetch(settings.workerUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        apiKey: settings.apiKey,
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 50,
-        system: 'Antworte nur mit: OK',
-        messages: [{ role: 'user', content: 'Test' }]
-      })
+    const r = await fetch(settings.workerUrl, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiKey: settings.apiKey, model: 'claude-sonnet-4-20250514', max_tokens: 50, system: 'Antworte nur: OK', messages: [{ role: 'user', content: 'Test' }] })
     });
-    const data = await resp.json();
-    if (data.content) {
-      alert('Verbindung erfolgreich! Alles funktioniert.');
-    } else if (data.error) {
-      alert('API-Fehler: ' + (data.error.message || JSON.stringify(data.error)));
-    } else {
-      alert('Unerwartete Antwort. Prüfe die Worker-URL.');
-    }
-  } catch(e) {
-    alert('Verbindungsfehler: ' + e.message + '\n\nPrüfe die Worker-URL.');
-  }
+    const d = await r.json();
+    if (d.content) alert('Verbindung erfolgreich!');
+    else alert('Fehler: ' + (d.error?.message || JSON.stringify(d)));
+  } catch(e) { alert('Verbindungsfehler: ' + e.message); }
 }
-
+ 
 function toggleSetting(key) {
   settings[key] = !settings[key];
   localStorage.setItem('settings', JSON.stringify(settings));
@@ -494,103 +672,73 @@ function setCalendar(type) {
   localStorage.setItem('settings', JSON.stringify(settings));
   initSettings();
 }
-
+ 
 // ==================== SPEECH ====================
 function toggleRecording() {
-  if (!settings.apiKey || !settings.workerUrl) {
-    switchTab('settings');
-    alert('Bitte erst API-Key und Worker-URL in den Einstellungen eingeben.');
-    return;
-  }
-  if (isRecording) stopRecording();
-  else startRecording();
+  if (!settings.apiKey || !settings.workerUrl) { switchTab('settings'); alert('Erst Einstellungen konfigurieren.'); return; }
+  if (isRecording) stopRecording(); else startRecording();
 }
-
+ 
 async function startRecording() {
-  if (!speechApiAvailable) { showFallback('Spracherkennung nicht unterstützt.'); return; }
-  if (micAvailable === false) { showFallback('Mikrofon nicht verfügbar.'); return; }
-
+  if (!speechApiAvailable) { showFallback('Nicht unterstützt.'); return; }
+  if (micAvailable === false) { showFallback('Mikrofon blockiert.'); return; }
   if (micAvailable === null) {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach(t => t.stop());
-      micAvailable = true; hideBanner();
-    } catch(e) {
-      micAvailable = false;
-      showFallback('Mikrofon verweigert. Nutze das Textfeld.');
-      return;
-    }
+      const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+      s.getTracks().forEach(t => t.stop()); micAvailable = true; hideBanner();
+    } catch(e) { micAvailable = false; showFallback('Mikrofon verweigert.'); return; }
   }
-
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SR();
-  recognition.lang = 'de-DE';
-  recognition.continuous = true;
-  recognition.interimResults = true;
+  recognition.lang = 'de-DE'; recognition.continuous = true; recognition.interimResults = true;
   finalTranscript = ''; transcript = '';
-
-  recognition.onresult = (event) => {
+ 
+  recognition.onresult = (e) => {
     let interim = '';
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      const t = event.results[i][0].transcript;
-      if (event.results[i].isFinal) finalTranscript += t + ' ';
-      else interim = t;
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript + ' ';
+      else interim = e.results[i][0].transcript;
     }
     transcript = finalTranscript + interim;
     showTranscript(transcript);
   };
-
-  recognition.onerror = (event) => {
-    if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+  recognition.onerror = (e) => {
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
       micAvailable = false; isRecording = false; updateMicButton();
-      showFallback('Mikrofon blockiert. Einstellungen → Safari → Mikrofon → Erlauben.');
-    } else if (event.error === 'network') {
+      showFallback('Mikrofon blockiert.');
+    } else if (e.error === 'network') {
       setStatus('Netzwerkfehler.', false, true); isRecording = false; updateMicButton();
-    } else if (event.error !== 'no-speech') {
-      setStatus('Fehler: ' + event.error, false, true);
-    }
+    } else if (e.error !== 'no-speech') setStatus('Fehler: ' + e.error, false, true);
   };
-
-  recognition.onend = () => { if (isRecording) { try { recognition.start(); } catch(e) {} } };
-
+  recognition.onend = () => { if (isRecording) try { recognition.start(); } catch(e) {} };
+ 
   try {
-    recognition.start();
-    isRecording = true; updateMicButton();
+    recognition.start(); isRecording = true; updateMicButton();
     setStatus('Ich höre zu...', false);
     document.getElementById('aufnahme-text').textContent = 'Ich höre zu...';
     document.getElementById('pending-list').style.display = 'none';
     document.getElementById('fallback-box').style.display = 'none';
-  } catch(e) {
-    showFallback('Spracherkennung konnte nicht starten.');
-  }
+  } catch(e) { showFallback('Konnte nicht starten.'); }
 }
-
+ 
 async function stopRecording() {
   isRecording = false;
   if (recognition) { recognition.onend = null; try { recognition.stop(); } catch(e) {} recognition = null; }
   updateMicButton();
   document.getElementById('aufnahme-text').textContent = 'Tippe auf das Mikrofon\nund erzähl mir von deinem Termin';
-  if (transcript.trim()) {
-    setStatus('Verarbeite...', true);
-    await processWithAI(transcript.trim());
-  } else {
-    setStatus('Kein Text erkannt.', false);
-  }
+  if (transcript.trim()) { setStatus('Verarbeite...', true); await processWithAI(transcript.trim()); }
+  else setStatus('Kein Text erkannt.', false);
 }
-
+ 
 async function submitFallbackText() {
-  if (!settings.apiKey || !settings.workerUrl) {
-    switchTab('settings');
-    alert('Bitte erst API-Key und Worker-URL eingeben.');
-    return;
-  }
-  const text = document.getElementById('fallback-textarea').value.trim();
-  if (!text) { setStatus('Bitte Text eingeben.', false, true); return; }
+  if (!settings.apiKey || !settings.workerUrl) { switchTab('settings'); return; }
+  const t = document.getElementById('fallback-textarea').value.trim();
+  if (!t) { setStatus('Bitte Text eingeben.', false, true); return; }
   setStatus('Verarbeite...', true);
-  await processWithAI(text);
+  await processWithAI(t);
   document.getElementById('fallback-textarea').value = '';
 }
-
+ 
 function updateMicButton() {
   const btn = document.getElementById('mic-btn');
   if (isRecording) {
@@ -603,156 +751,143 @@ function updateMicButton() {
     document.getElementById('stop-icon').style.display = 'none';
   }
 }
-
+ 
 function setStatus(text, processing, isError) {
   const el = document.getElementById('status');
   el.textContent = (processing ? '⏳ ' : '') + text;
   el.className = 'status' + (processing ? ' processing' : '') + (isError ? ' error' : '');
 }
-
+ 
 function showTranscript(text) {
   const box = document.getElementById('transcript-box');
   if (text) { box.style.display = 'block'; document.getElementById('transcript-text').textContent = text; }
-  else { box.style.display = 'none'; }
+  else box.style.display = 'none';
 }
-
-// ==================== AI (via Cloudflare Worker) ====================
+ 
+// ==================== AI ====================
 async function processWithAI(text) {
   try {
     const today = new Date();
     const dateStr = today.toISOString().split('T')[0];
     const dayNames = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
-
-    const response = await fetch(settings.workerUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+ 
+    const r = await fetch(settings.workerUrl, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        apiKey: settings.apiKey,
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: `Du bist ein Termin-Assistent. Heute ist ${dayNames[today.getDay()]}, ${dateStr}. Extrahiere alle Termine aus dem Text. Antworte NUR mit einem JSON-Array (keine Backticks, kein Markdown). Format: [{"titel":"...","datum":"YYYY-MM-DD","uhrzeit":"HH:MM","ort":"...","notiz":"..."}]. Kein Ort = "". Keine Uhrzeit = "09:00". Relative Daten korrekt berechnen.`,
+        apiKey: settings.apiKey, model: 'claude-sonnet-4-20250514', max_tokens: 1000,
+        system: `Du bist ein Termin-Assistent. Heute ist ${dayNames[today.getDay()]}, ${dateStr}. Extrahiere alle Termine. Antworte NUR mit JSON-Array: [{"titel":"...","datum":"YYYY-MM-DD","uhrzeit":"HH:MM","ort":"...","notiz":"..."}]. Kein Ort="". Keine Uhrzeit="09:00". Relative Daten korrekt berechnen.`,
         messages: [{ role: 'user', content: text }]
       })
     });
-
-    const data = await response.json();
-    if (data.error) {
-      const msg = data.error.message || JSON.stringify(data.error);
-      if (msg.includes('invalid x-api-key') || msg.includes('authentication')) {
-        setStatus('API-Key ungültig. Prüfe ihn in den Einstellungen.', false, true);
-      } else if (msg.includes('credit') || msg.includes('billing')) {
-        setStatus('Kein API-Guthaben. Lade Credits auf console.anthropic.com auf.', false, true);
-      } else {
-        setStatus('API-Fehler: ' + msg, false, true);
-      }
-      return;
-    }
-
-    const content = data.content?.[0]?.text || '[]';
+    const data = await r.json();
+    if (data.error) { setStatus('API-Fehler: ' + (data.error.message || ''), false, true); return; }
+ 
     let parsed;
-    try { parsed = JSON.parse(content.replace(/```json|```/g, '').trim()); } catch(e) {
-      setStatus('Antwort konnte nicht verarbeitet werden.', false, true); return;
+    try { parsed = JSON.parse((data.content?.[0]?.text || '[]').replace(/```json|```/g,'').trim()); } catch(e) {
+      setStatus('Antwort nicht verarbeitbar.', false, true); return;
     }
-
-    if (!Array.isArray(parsed) || parsed.length === 0) {
-      setStatus('Keine Termine erkannt. Versuch es nochmal.', false); return;
-    }
-
+    if (!Array.isArray(parsed) || !parsed.length) { setStatus('Keine Termine erkannt.', false); return; }
+ 
     const newTermine = parsed.map(t => ({
-      id: idCounter++,
-      titel: t.titel || 'Unbenannter Termin',
-      datum: t.datum || dateStr,
-      uhrzeit: t.uhrzeit || '09:00',
-      ort: t.ort || '',
-      notiz: t.notiz || ''
+      id: idCounter++, titel: t.titel || 'Termin', datum: t.datum || dateStr,
+      uhrzeit: t.uhrzeit || '09:00', ort: t.ort || '', notiz: t.notiz || '', googleEventId: null
     }));
     localStorage.setItem('idCounter', idCounter.toString());
-
+ 
     if (settings.readBack && 'speechSynthesis' in window) {
-      const msg = newTermine.map(t =>
-        `${t.titel} am ${formatDateLong(t.datum)} um ${t.uhrzeit}${t.ort ? ' in ' + t.ort : ''}`
-      ).join('. ');
-      const utt = new SpeechSynthesisUtterance(msg);
-      utt.lang = 'de-DE'; utt.rate = 0.95;
-      speechSynthesis.speak(utt);
+      const msg = newTermine.map(t => `${t.titel} am ${formatDateLong(t.datum)} um ${t.uhrzeit}${t.ort?' in '+t.ort:''}`).join('. ');
+      const u = new SpeechSynthesisUtterance(msg); u.lang='de-DE'; u.rate=0.95; speechSynthesis.speak(u);
     }
-
+ 
     if (settings.confirmBefore) {
       pendingTermine = newTermine; showPending();
-      setStatus(newTermine.length + ' Termin(e) erkannt – bitte bestätigen', false);
+      setStatus(newTermine.length + ' Termin(e) erkannt – bestätigen?', false);
     } else {
-      termine.push(...newTermine); saveTermine();
-      setStatus(newTermine.length + ' Termin(e) gespeichert!', false);
+      await saveNewTermine(newTermine);
     }
   } catch(e) {
     console.error('AI error:', e);
-    setStatus('Verbindungsfehler. Prüfe Worker-URL und Internetverbindung.', false, true);
+    setStatus('Verbindungsfehler.', false, true);
   }
 }
-
+ 
+// ==================== SAVE WITH GOOGLE SYNC ====================
+async function saveNewTermine(newTermine) {
+  if (settings.calendar === 'google' && googleAccessToken) {
+    setStatus('Speichere in Google Kalender...', true);
+    for (const t of newTermine) {
+      try {
+        t.googleEventId = await createGoogleEvent(t);
+      } catch(e) {
+        console.error('Google create failed:', e);
+        setStatus('Google Kalender Fehler. Termin lokal gespeichert.', false, true);
+      }
+    }
+  }
+  termine.push(...newTermine);
+  saveTermine();
+  const synced = newTermine.filter(t => t.googleEventId).length;
+  if (settings.calendar === 'google' && synced > 0) {
+    setStatus(synced + ' Termin(e) im Google Kalender erstellt!', false, false);
+    document.getElementById('status').classList.add('success');
+  } else {
+    setStatus(newTermine.length + ' Termin(e) gespeichert!', false);
+  }
+}
+ 
 // ==================== PENDING ====================
 function showPending() {
   document.getElementById('pending-cards').innerHTML = pendingTermine.map(t => `
     <div class="pending-card">
       <div class="pending-title">${esc(t.titel)}</div>
-      <div class="pending-sub">${formatDate(t.datum)} · ${t.uhrzeit}${t.ort ? ' · ' + esc(t.ort) : ''}</div>
+      <div class="pending-sub">${formatDate(t.datum)} · ${t.uhrzeit}${t.ort?' · '+esc(t.ort):''}</div>
     </div>`).join('');
   document.getElementById('pending-list').style.display = 'flex';
 }
-function confirmPending() {
-  termine.push(...pendingTermine); saveTermine();
-  setStatus(pendingTermine.length + ' Termin(e) gespeichert!', false);
-  pendingTermine = []; document.getElementById('pending-list').style.display = 'none';
+async function confirmPending() {
+  document.getElementById('pending-list').style.display = 'none';
+  await saveNewTermine(pendingTermine);
+  pendingTermine = [];
 }
 function rejectPending() {
   pendingTermine = []; document.getElementById('pending-list').style.display = 'none';
   setStatus('Verworfen.', false);
 }
-
+ 
 // ==================== TERMINE ====================
 function renderTermine() {
   const list = document.getElementById('termine-list');
-  if (!termine.length) {
-    list.innerHTML = '<div class="empty-state">Noch keine Termine.\nGeh zur Aufnahme und erzähl mir davon!</div>';
-    return;
-  }
+  if (!termine.length) { list.innerHTML = '<div class="empty-state">Noch keine Termine.\nGeh zur Aufnahme und erzähl mir davon!</div>'; return; }
   const sorted = [...termine].sort((a,b) => (a.datum+a.uhrzeit).localeCompare(b.datum+b.uhrzeit));
-  const calLabel = settings.calendar === 'google' ? 'Google Kalender' : 'Apple Kalender';
-  list.innerHTML = `
-    <button class="btn btn-export" onclick="exportAll()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-      </svg>
-      Alle zu ${esc(calLabel)} exportieren
-    </button>
-    ${sorted.map(t => `
-      <div class="termin-card" id="termin-${t.id}">
-        <div class="termin-info">
-          <div class="termin-title">${esc(t.titel)}</div>
-          <div class="termin-date">${formatDate(t.datum)} · ${t.uhrzeit}</div>
-          ${t.ort ? `<div class="termin-ort">${esc(t.ort)}</div>` : ''}
-          ${t.notiz ? `<div class="termin-notiz">${esc(t.notiz)}</div>` : ''}
-        </div>
-        <div class="termin-actions">
-          <button class="icon-btn" onclick="exportOne(${t.id})">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a7aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-            </svg>
-          </button>
-          <button class="icon-btn" onclick="editTermin(${t.id})">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a7aff" stroke-width="2">
-              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-          </button>
-          <button class="icon-btn" onclick="deleteTermin(${t.id})">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e24b4a" stroke-width="2">
-              <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-            </svg>
-          </button>
-        </div>
-      </div>`).join('')}`;
+  list.innerHTML = sorted.map(t => `
+    <div class="termin-card" id="termin-${t.id}">
+      <div class="termin-info">
+        <div class="termin-title">${esc(t.titel)}</div>
+        <div class="termin-date">${formatDate(t.datum)} · ${t.uhrzeit}</div>
+        ${t.ort?`<div class="termin-ort">${esc(t.ort)}</div>`:''}
+        ${t.notiz?`<div class="termin-notiz">${esc(t.notiz)}</div>`:''}
+        ${t.googleEventId?'<div class="termin-synced"><div class="api-dot green" style="width:6px;height:6px;"></div>Google Kalender</div>':''}
+      </div>
+      <div class="termin-actions">
+        ${!t.googleEventId?`<button class="icon-btn" onclick="exportOne(${t.id})">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a7aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </button>`:''}
+        <button class="icon-btn" onclick="editTermin(${t.id})">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a7aff" stroke-width="2">
+            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </button>
+        <button class="icon-btn" onclick="deleteTermin(${t.id})">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e24b4a" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+          </svg>
+        </button>
+      </div>
+    </div>`).join('');
 }
-
+ 
 function editTermin(id) {
   const t = termine.find(x => x.id === id);
   if (!t) return;
@@ -771,8 +906,8 @@ function editTermin(id) {
       </div>
     </div>`;
 }
-
-function saveEdit(id) {
+ 
+async function saveEdit(id) {
   const t = termine.find(x => x.id === id);
   if (!t) return;
   t.titel = document.getElementById('edit-titel-' + id).value || t.titel;
@@ -780,60 +915,49 @@ function saveEdit(id) {
   t.uhrzeit = document.getElementById('edit-uhrzeit-' + id).value || t.uhrzeit;
   t.ort = document.getElementById('edit-ort-' + id).value;
   t.notiz = document.getElementById('edit-notiz-' + id).value;
+ 
+  // Sync to Google
+  if (t.googleEventId && settings.calendar === 'google') {
+    try { await updateGoogleEvent(t); } catch(e) { console.error('Google update failed:', e); }
+  }
   saveTermine(); renderTermine();
 }
-
-function deleteTermin(id) {
-  termine = termine.filter(t => t.id !== id);
+ 
+async function deleteTermin(id) {
+  const t = termine.find(x => x.id === id);
+  if (!t) return;
+  // Delete from Google
+  if (t.googleEventId && settings.calendar === 'google') {
+    try { await deleteGoogleEvent(t); } catch(e) { console.error('Google delete failed:', e); }
+  }
+  termine = termine.filter(x => x.id !== id);
   saveTermine(); renderTermine();
 }
-
-// ==================== CALENDAR ====================
+ 
+// ==================== APPLE CALENDAR (fallback) ====================
 function makeICS(items) {
   const events = items.map(t => {
-    const start = new Date(t.datum + 'T' + t.uhrzeit + ':00');
-    const end = new Date(start.getTime() + 3600000);
-    const fmt = d => d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
-    return ['BEGIN:VEVENT','DTSTART:'+fmt(start),'DTEND:'+fmt(end),'SUMMARY:'+t.titel,
+    const s = new Date(t.datum+'T'+t.uhrzeit+':00'), e = new Date(s.getTime()+3600000);
+    const f = d => d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+    return ['BEGIN:VEVENT','DTSTART:'+f(s),'DTEND:'+f(e),'SUMMARY:'+t.titel,
       t.ort?'LOCATION:'+t.ort:'',t.notiz?'DESCRIPTION:'+t.notiz:'',
       'BEGIN:VALARM','TRIGGER:-PT15M','ACTION:DISPLAY','DESCRIPTION:'+t.titel,'END:VALARM',
       'END:VEVENT'].filter(Boolean).join('\r\n');
   }).join('\r\n');
   return 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//TerminApp//DE\r\n'+events+'\r\nEND:VCALENDAR';
 }
-
-function downloadICS(ics, filename) {
-  const blob = new Blob([ics], { type: 'text/calendar' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = filename;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+ 
+function downloadICS(ics, fn) {
+  const b = new Blob([ics],{type:'text/calendar'}), u = URL.createObjectURL(b);
+  const a = document.createElement('a'); a.href=u; a.download=fn;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u);
 }
-
-function makeGoogleCalURL(t) {
-  const start = new Date(t.datum + 'T' + t.uhrzeit + ':00');
-  const end = new Date(start.getTime() + 3600000);
-  const fmt = d => d.toISOString().replace(/[-:.]/g,'').replace(/\d{3}Z/,'Z');
-  return 'https://calendar.google.com/calendar/render?' + new URLSearchParams({
-    action:'TEMPLATE', text:t.titel, dates:fmt(start)+'/'+fmt(end),
-    details:t.notiz||'', location:t.ort||''
-  }).toString();
-}
-
+ 
 function exportOne(id) {
   const t = termine.find(x => x.id === id);
-  if (!t) return;
-  if (settings.calendar === 'google') window.open(makeGoogleCalURL(t), '_blank');
-  else downloadICS(makeICS([t]), t.titel.replace(/\s+/g,'_') + '.ics');
+  if (t) downloadICS(makeICS([t]), t.titel.replace(/\s+/g,'_')+'.ics');
 }
-
-function exportAll() {
-  if (!termine.length) return;
-  if (settings.calendar === 'google') {
-    if (termine.length > 5 && !confirm(termine.length + ' Tabs werden geöffnet. OK?')) return;
-    termine.forEach(t => window.open(makeGoogleCalURL(t), '_blank'));
-  } else downloadICS(makeICS(termine), 'alle_termine.ics');
-}
-
+ 
 // ==================== HELPERS ====================
 function saveTermine() { localStorage.setItem('termine', JSON.stringify(termine)); }
 function formatDate(s) {
@@ -846,6 +970,10 @@ function formatDateLong(s) {
   return d.getDate()+'. '+['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'][d.getMonth()];
 }
 function esc(s) { const d = document.createElement('div'); d.textContent = s||''; return d.innerHTML; }
+ 
+// Init Google auth on load
+setTimeout(() => { if (settings.googleClientId) initGoogleAuth(); }, 1000);
 </script>
 </body>
 </html>
+ 
