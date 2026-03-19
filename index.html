@@ -8,124 +8,80 @@
 <meta name="apple-mobile-web-app-title" content="Termin-App">
 <title>Termin-App</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-    background: #111113; color: #fff;
-    min-height: 100vh; min-height: 100dvh;
-    display: flex; flex-direction: column;
-    max-width: 500px; margin: 0 auto; overflow-x: hidden;
-  }
-  .header { text-align: center; padding: 20px 16px 8px; }
-  .header span { font-size: 11px; color: #555; letter-spacing: 2px; text-transform: uppercase; }
-  .nav { display: flex; background: #1c1c1e; border-radius: 12px; margin: 4px 16px 16px; padding: 3px; }
-  .nav-tab {
-    flex: 1; text-align: center; padding: 8px 0; font-size: 13px; font-weight: 400;
-    color: #666; background: transparent; border-radius: 10px; cursor: pointer;
-    transition: all 0.2s; border: none; -webkit-appearance: none;
-  }
-  .nav-tab.active { font-weight: 500; color: #fff; background: #2c2c2e; }
-  .nav-tab.settings-tab { flex: 0 0 44px; }
-  .content { flex: 1; padding: 0 16px 24px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
- 
-  .aufnahme { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 420px; gap: 20px; }
-  .aufnahme-text { font-size: 15px; color: #888; text-align: center; line-height: 1.6; white-space: pre-line; }
-  .mic-btn {
-    width: 96px; height: 96px; border-radius: 50%; border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, #4a7aff, #6c5ce7);
-    box-shadow: 0 0 30px rgba(74,122,255,0.3); transition: all 0.3s;
-  }
-  .mic-btn.recording { background: linear-gradient(135deg, #e24b4a, #c0392b); box-shadow: 0 0 40px rgba(226,75,74,0.4); animation: pulse 1.5s ease-in-out infinite; }
-  .mic-btn.disabled { opacity: 0.4; pointer-events: none; }
-  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
-  .status { font-size: 13px; color: #555; text-align: center; line-height: 1.4; padding: 0 10px; }
-  .status.processing { color: #4a7aff; }
-  .status.error { color: #e24b4a; }
-  .status.success { color: #34a853; }
-  .transcript-box { width: 100%; background: #1c1c1e; border-radius: 12px; padding: 14px; font-size: 14px; color: #ccc; line-height: 1.5; max-height: 120px; overflow-y: auto; }
-  .transcript-label { font-size: 11px; color: #555; margin-bottom: 6px; }
-  .fallback-box { width: 100%; display: flex; flex-direction: column; gap: 8px; }
-  .fallback-box textarea { width: 100%; background: #1c1c1e; border: 1px solid #3a3a3c; border-radius: 12px; padding: 12px 14px; font-size: 14px; color: #fff; resize: none; height: 80px; outline: none; font-family: inherit; }
-  .fallback-box textarea:focus { border-color: #4a7aff; }
-  .fallback-box textarea::placeholder { color: #555; }
-  .pending-list { width: 100%; display: flex; flex-direction: column; gap: 8px; }
-  .pending-label { font-size: 12px; color: #888; margin-bottom: 2px; }
-  .pending-card { background: #1c1c1e; border-radius: 12px; padding: 10px 14px; border-left: 3px solid #4a7aff; }
-  .pending-title { font-size: 14px; font-weight: 500; }
-  .pending-sub { font-size: 12px; color: #888; margin-top: 2px; }
-  .pending-reminder { font-size: 11px; color: #4a7aff; margin-top: 2px; }
-  .btn-row { display: flex; gap: 10px; margin-top: 8px; }
-  .termine-list { display: flex; flex-direction: column; gap: 10px; }
-  .empty-state { text-align: center; color: #555; padding: 80px 20px; font-size: 14px; white-space: pre-line; }
-  .termin-card { background: #1c1c1e; border-radius: 12px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: flex-start; }
-  .termin-info { flex: 1; min-width: 0; }
-  .termin-title { font-size: 14px; font-weight: 500; }
-  .termin-date { font-size: 12px; color: #888; margin-top: 3px; }
-  .termin-ort { font-size: 11px; color: #666; margin-top: 2px; }
-  .termin-notiz { font-size: 11px; color: #555; margin-top: 2px; font-style: italic; }
-  .termin-reminder { font-size: 10px; color: #4a7aff; margin-top: 3px; }
-  .termin-synced { font-size: 10px; color: #34a853; margin-top: 3px; display: flex; align-items: center; gap: 4px; }
-  .termin-actions { display: flex; gap: 10px; margin-left: 8px; flex-shrink: 0; }
-  .icon-btn { cursor: pointer; padding: 4px; background: none; border: none; }
-  .edit-card { background: #1c1c1e; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
-  .edit-row { display: flex; gap: 8px; }
-  input[type="text"], input[type="date"], input[type="time"], input[type="password"], input[type="url"], input[type="number"], select {
-    background: #2c2c2e; border: 1px solid #3a3a3c; border-radius: 8px;
-    padding: 8px 12px; font-size: 14px; color: #fff; outline: none; width: 100%;
-  }
-  select { -webkit-appearance: none; }
-  input:focus, select:focus { border-color: #4a7aff; }
-  input[type="date"]::-webkit-calendar-picker-indicator, input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1); }
-  .btn { border: none; border-radius: 8px; padding: 10px 20px; font-size: 13px; font-weight: 500; color: #fff; cursor: pointer; transition: opacity 0.2s; }
-  .btn:active { opacity: 0.8; }
-  .btn-primary { background: #4a7aff; }
-  .btn-secondary { background: #555; }
-  .btn-sm { padding: 6px 14px; font-size: 12px; }
-  .btn-google { background: #fff; color: #333; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 500; border: 1px solid #ddd; }
-  .btn-google:active { background: #f0f0f0; }
-  .btn-export { background: #4a7aff; width: 100%; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 6px; }
-  .settings-title { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
-  .settings-section-title { font-size: 13px; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-  .setting-row { display: flex; justify-content: space-between; align-items: center; background: #1c1c1e; border-radius: 12px; padding: 14px 16px; }
-  .setting-block { background: #1c1c1e; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
-  .setting-label { font-size: 14px; }
-  .setting-desc { font-size: 12px; color: #666; margin-top: 2px; }
-  .toggle { width: 44px; height: 26px; border-radius: 13px; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; border: none; }
-  .toggle.on { background: #4a7aff; }
-  .toggle.off { background: #3a3a3c; }
-  .toggle-knob { width: 22px; height: 22px; border-radius: 50%; background: #fff; position: absolute; top: 2px; transition: left 0.2s; pointer-events: none; }
-  .toggle.on .toggle-knob { left: 20px; }
-  .toggle.off .toggle-knob { left: 2px; }
-  .cal-selector { display: flex; gap: 8px; }
-  .cal-option { flex: 1; padding: 10px 8px; background: #2c2c2e; border: 2px solid transparent; border-radius: 10px; cursor: pointer; text-align: center; transition: all 0.2s; }
-  .cal-option.active { border-color: #4a7aff; background: #1a2a4a; }
-  .cal-option-label { font-size: 12px; color: #aaa; margin-top: 4px; }
-  .cal-option.active .cal-option-label { color: #fff; }
-  .google-account-box { background: #1a2a1a; border: 1px solid #2a4a2a; border-radius: 10px; padding: 12px; display: flex; align-items: center; justify-content: space-between; }
-  .google-account-info { display: flex; align-items: center; gap: 10px; }
-  .google-avatar { width: 32px; height: 32px; border-radius: 50%; background: #34a853; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; }
-  .api-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; margin-top: 4px; }
-  .api-dot { width: 8px; height: 8px; border-radius: 50%; }
-  .api-dot.green { background: #34a853; }
-  .api-dot.red { background: #e24b4a; }
-  .api-dot.gray { background: #555; }
-  .check-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
-  .check-result { font-size: 12px; flex: 1; }
-  .check-result.ok { color: #34a853; }
-  .check-result.fail { color: #e24b4a; }
-  .check-result.wait { color: #4a7aff; }
-  .slider-row { display: flex; align-items: center; gap: 12px; }
-  .slider-row input[type="range"] { flex: 1; accent-color: #4a7aff; }
-  .slider-value { min-width: 55px; text-align: right; font-size: 14px; font-weight: 500; }
-  .divider { height: 1px; background: #2c2c2e; margin: 8px 0; }
-  .settings-info { font-size: 12px; color: #555; line-height: 1.5; }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
-  .mic-permission-banner { width: 100%; background: #1c1c1e; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
-  .mic-permission-banner p { font-size: 13px; color: #888; text-align: center; line-height: 1.5; }
-  .setup-banner { width: 100%; background: #2a1a0a; border: 1px solid #4a3520; border-radius: 12px; padding: 14px; text-align: center; }
-  .setup-banner p { font-size: 13px; color: #cca050; line-height: 1.5; margin-bottom: 8px; }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:#111113;color:#fff;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;max-width:500px;margin:0 auto;overflow-x:hidden}
+  .header{text-align:center;padding:20px 16px 8px}.header span{font-size:11px;color:#555;letter-spacing:2px;text-transform:uppercase}
+  .nav{display:flex;background:#1c1c1e;border-radius:12px;margin:4px 16px 16px;padding:3px}
+  .nav-tab{flex:1;text-align:center;padding:8px 0;font-size:13px;font-weight:400;color:#666;background:transparent;border-radius:10px;cursor:pointer;transition:all .2s;border:none;-webkit-appearance:none}
+  .nav-tab.active{font-weight:500;color:#fff;background:#2c2c2e}.nav-tab.settings-tab{flex:0 0 44px}
+  .content{flex:1;padding:0 16px 24px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .aufnahme{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:420px;gap:20px}
+  .aufnahme-text{font-size:15px;color:#888;text-align:center;line-height:1.6;white-space:pre-line}
+  .mic-btn{width:96px;height:96px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#4a7aff,#6c5ce7);box-shadow:0 0 30px rgba(74,122,255,.3);transition:all .3s}
+  .mic-btn.recording{background:linear-gradient(135deg,#e24b4a,#c0392b);box-shadow:0 0 40px rgba(226,75,74,.4);animation:pulse 1.5s ease-in-out infinite}
+  .mic-btn.disabled{opacity:.4;pointer-events:none}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+  .status{font-size:13px;color:#555;text-align:center;line-height:1.4;padding:0 10px}
+  .status.processing{color:#4a7aff}.status.error{color:#e24b4a}.status.success{color:#34a853}
+  .transcript-box{width:100%;background:#1c1c1e;border-radius:12px;padding:14px;font-size:14px;color:#ccc;line-height:1.5;max-height:120px;overflow-y:auto}
+  .transcript-label{font-size:11px;color:#555;margin-bottom:6px}
+  .fallback-box{width:100%;display:flex;flex-direction:column;gap:8px}
+  .fallback-box textarea{width:100%;background:#1c1c1e;border:1px solid #3a3a3c;border-radius:12px;padding:12px 14px;font-size:14px;color:#fff;resize:none;height:80px;outline:none;font-family:inherit}
+  .fallback-box textarea:focus{border-color:#4a7aff}.fallback-box textarea::placeholder{color:#555}
+  .pending-list{width:100%;display:flex;flex-direction:column;gap:8px}
+  .pending-label{font-size:12px;color:#888;margin-bottom:2px}
+  .pending-card{background:#1c1c1e;border-radius:12px;padding:10px 14px;border-left:3px solid #4a7aff}
+  .pending-title{font-size:14px;font-weight:500}.pending-sub{font-size:12px;color:#888;margin-top:2px}
+  .pending-reminder{font-size:11px;color:#4a7aff;margin-top:2px}
+  .btn-row{display:flex;gap:10px;margin-top:8px}
+  .termine-list{display:flex;flex-direction:column;gap:10px}
+  .empty-state{text-align:center;color:#555;padding:80px 20px;font-size:14px;white-space:pre-line}
+  .termin-card{background:#1c1c1e;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:flex-start}
+  .termin-info{flex:1;min-width:0}.termin-title{font-size:14px;font-weight:500}
+  .termin-date{font-size:12px;color:#888;margin-top:3px}.termin-ort{font-size:11px;color:#666;margin-top:2px}
+  .termin-notiz{font-size:11px;color:#555;margin-top:2px;font-style:italic}
+  .termin-reminder{font-size:10px;color:#4a7aff;margin-top:3px}
+  .termin-synced{font-size:10px;color:#34a853;margin-top:3px;display:flex;align-items:center;gap:4px}
+  .termin-actions{display:flex;gap:10px;margin-left:8px;flex-shrink:0}
+  .icon-btn{cursor:pointer;padding:4px;background:none;border:none}
+  .edit-card{background:#1c1c1e;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+  .edit-row{display:flex;gap:8px}
+  input[type="text"],input[type="date"],input[type="time"],input[type="password"],input[type="url"],input[type="number"],select{background:#2c2c2e;border:1px solid #3a3a3c;border-radius:8px;padding:8px 12px;font-size:14px;color:#fff;outline:none;width:100%}
+  input:focus,select:focus{border-color:#4a7aff}
+  input[type="date"]::-webkit-calendar-picker-indicator,input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1)}
+  .btn{border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:500;color:#fff;cursor:pointer;transition:opacity .2s}
+  .btn:active{opacity:.8}.btn-primary{background:#4a7aff}.btn-secondary{background:#555}.btn-sm{padding:6px 14px;font-size:12px}
+  .btn-google{background:#fff;color:#333;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:500;border:1px solid #ddd}
+  .btn-google:active{background:#f0f0f0}
+  .settings-title{font-size:16px;font-weight:500;margin-bottom:4px}
+  .settings-section-title{font-size:13px;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+  .setting-row{display:flex;justify-content:space-between;align-items:center;background:#1c1c1e;border-radius:12px;padding:14px 16px}
+  .setting-block{background:#1c1c1e;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+  .setting-label{font-size:14px}.setting-desc{font-size:12px;color:#666;margin-top:2px}
+  .toggle{width:44px;height:26px;border-radius:13px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;border:none}
+  .toggle.on{background:#4a7aff}.toggle.off{background:#3a3a3c}
+  .toggle-knob{width:22px;height:22px;border-radius:50%;background:#fff;position:absolute;top:2px;transition:left .2s;pointer-events:none}
+  .toggle.on .toggle-knob{left:20px}.toggle.off .toggle-knob{left:2px}
+  .cal-selector{display:flex;gap:8px}
+  .cal-option{flex:1;padding:10px 8px;background:#2c2c2e;border:2px solid transparent;border-radius:10px;cursor:pointer;text-align:center;transition:all .2s}
+  .cal-option.active{border-color:#4a7aff;background:#1a2a4a}
+  .cal-option-label{font-size:12px;color:#aaa;margin-top:4px}.cal-option.active .cal-option-label{color:#fff}
+  .google-account-box{background:#1a2a1a;border:1px solid #2a4a2a;border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:space-between}
+  .google-account-info{display:flex;align-items:center;gap:10px}
+  .google-avatar{width:32px;height:32px;border-radius:50%;background:#34a853;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500}
+  .api-dot{width:8px;height:8px;border-radius:50%}.api-dot.green{background:#34a853}.api-dot.red{background:#e24b4a}.api-dot.gray{background:#555}
+  .check-row{display:flex;align-items:center;gap:8px;margin-top:4px}
+  .check-result{font-size:12px;flex:1}.check-result.ok{color:#34a853}.check-result.fail{color:#e24b4a}.check-result.wait{color:#4a7aff}
+  .slider-row{display:flex;align-items:center;gap:12px}
+  .slider-row input[type="range"]{flex:1;accent-color:#4a7aff}
+  .slider-value{min-width:55px;text-align:right;font-size:14px;font-weight:500}
+  .divider{height:1px;background:#2c2c2e;margin:8px 0}
+  .settings-info{font-size:12px;color:#555;line-height:1.5}
+  .tab-content{display:none}.tab-content.active{display:block}
+  .mic-permission-banner{width:100%;background:#1c1c1e;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;align-items:center}
+  .mic-permission-banner p{font-size:13px;color:#888;text-align:center;line-height:1.5}
+  .setup-banner{width:100%;background:#2a1a0a;border:1px solid #4a3520;border-radius:12px;padding:14px;text-align:center}
+  .setup-banner p{font-size:13px;color:#cca050;line-height:1.5;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -148,7 +104,7 @@
       </div>
       <div class="aufnahme-text" id="aufnahme-text">Tippe auf das Mikrofon
 und erzähl mir von deinem Termin</div>
-      <button class="mic-btn" id="mic-btn" onclick="toggleRecording()">
+      <button class="mic-btn" id="mic-btn" onclick="handleMicClick()">
         <svg id="mic-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="1" width="6" height="11" rx="3"/><path d="M19 10v1a7 7 0 01-14 0v-1"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
         <svg id="stop-icon" width="32" height="32" viewBox="0 0 24 24" fill="#fff" style="display:none"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
       </button>
@@ -169,15 +125,10 @@ und erzähl mir von deinem Termin</div>
       </div>
     </div>
   </div>
- 
-  <div id="tab-termine" class="tab-content">
-    <div class="termine-list" id="termine-list"></div>
-  </div>
- 
+  <div id="tab-termine" class="tab-content"><div class="termine-list" id="termine-list"></div></div>
   <div id="tab-settings" class="tab-content">
     <div style="display:flex;flex-direction:column;gap:16px;padding-top:8px;">
       <div class="settings-title">Einstellungen</div>
- 
       <div class="settings-section-title">Verhalten</div>
       <div class="setting-row">
         <div><div class="setting-label">Termine vorher bestätigen</div><div class="setting-desc">Zeigt erkannte Termine zur Bestätigung an</div></div>
@@ -187,17 +138,14 @@ und erzähl mir von deinem Termin</div>
         <div><div class="setting-label">Termine vorlesen</div><div class="setting-desc">Liest erkannte Termine laut vor</div></div>
         <button class="toggle off" id="toggle-readback" onclick="toggleSetting('readBack')"><div class="toggle-knob"></div></button>
       </div>
- 
-      <!-- Default reminder slider -->
       <div class="setting-block">
         <div class="setting-label">Standard-Erinnerung</div>
-        <div class="setting-desc">Wird verwendet, wenn du keine bestimmte Zeit sagst. Du kannst auch sagen: "erinner mich 1 Stunde vorher" oder "30 Minuten Fahrt".</div>
+        <div class="setting-desc">Wird verwendet, wenn du keine bestimmte Zeit sagst.</div>
         <div class="slider-row">
           <input type="range" id="slider-reminder" min="5" max="120" step="5" value="15" oninput="updateReminderSlider()">
           <span class="slider-value" id="slider-reminder-value">15 Min</span>
         </div>
       </div>
- 
       <div class="divider"></div>
       <div class="settings-section-title">Kalender-Modus</div>
       <div style="background:#1c1c1e;border-radius:12px;padding:14px 16px;">
@@ -212,7 +160,6 @@ und erzähl mir von deinem Termin</div>
           </div>
         </div>
       </div>
- 
       <div class="divider"></div>
       <div class="settings-section-title">Google Kalender</div>
       <div class="setting-block">
@@ -232,7 +179,6 @@ und erzähl mir von deinem Termin</div>
             </div>
             <button class="btn btn-secondary btn-sm" onclick="googleLogout()">Abmelden</button>
           </div>
-          <div class="api-status" style="margin-top:8px;"><div class="api-dot green"></div><span style="color:#34a853;">Verbunden</span></div>
         </div>
       </div>
       <div class="setting-block">
@@ -240,7 +186,6 @@ und erzähl mir von deinem Termin</div>
         <input type="text" id="input-google-client-id" placeholder="xxxxxxxx.apps.googleusercontent.com" oninput="saveAllSettings()">
         <div class="check-row"><button class="btn btn-secondary btn-sm" onclick="checkGoogleClientId()">Prüfen</button><span class="check-result" id="check-google-client">–</span></div>
       </div>
- 
       <div class="divider"></div>
       <div class="settings-section-title">KI-Verbindung</div>
       <div class="setting-block">
@@ -253,24 +198,20 @@ und erzähl mir von deinem Termin</div>
         <input type="url" id="input-worker-url" placeholder="https://termin-proxy.xxx.workers.dev" oninput="saveAllSettings()">
         <div class="check-row"><button class="btn btn-secondary btn-sm" onclick="checkWorkerUrl()">Prüfen</button><span class="check-result" id="check-worker">–</span></div>
       </div>
- 
       <div class="divider"></div>
       <div class="settings-info">
-        <b>Tipp:</b> Du kannst beim Sprechen sagen:<br>
-        "Erinner mich 1 Stunde vorher" oder<br>
-        "30 Minuten Fahrt zum Termin" –<br>
-        die App passt die Erinnerung automatisch an.
+        <b>Tipp:</b> Sag beim Sprechen z.B.:<br>
+        "Treffe Jens um 21:30, 40 Min Fahrt, Hose mitnehmen"<br>
+        → Titel: "Jens – Hose mitnehmen"<br>
+        → Erinnerung: 40 Min vorher
       </div>
     </div>
   </div>
 </div>
- 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-// ==================== STATE ====================
 let termine=JSON.parse(localStorage.getItem('termine')||'[]');
-let pendingTermine=[];
-let isRecording=false, recognition=null, transcript='', finalTranscript='';
+let pendingTermine=[],isRecording=false,recognition=null,transcript='',finalTranscript='';
 let idCounter=parseInt(localStorage.getItem('idCounter')||'1');
 let settings=JSON.parse(localStorage.getItem('settings')||'{}');
 if(settings.confirmBefore===undefined)settings.confirmBefore=true;
@@ -280,74 +221,89 @@ if(!settings.apiKey)settings.apiKey='';
 if(!settings.workerUrl)settings.workerUrl='';
 if(!settings.googleClientId)settings.googleClientId='';
 if(!settings.defaultReminder)settings.defaultReminder=15;
- 
-let micAvailable=null;
-let speechApiAvailable=!!(window.SpeechRecognition||window.webkitSpeechRecognition);
+let micAvailable=null,speechApiAvailable=!!(window.SpeechRecognition||window.webkitSpeechRecognition);
 let googleAccessToken=localStorage.getItem('googleAccessToken')||'';
 let googleTokenExpiry=parseInt(localStorage.getItem('googleTokenExpiry')||'0');
 let googleUserName=localStorage.getItem('googleUserName')||'';
 let googleUserEmail=localStorage.getItem('googleUserEmail')||'';
 let tokenClient=null;
+// iOS TTS unlock flag
+let ttsUnlocked=false;
  
 document.addEventListener('DOMContentLoaded',()=>{loadAllSettings();initSettings();checkMicPermission();checkSetup();updateGoogleUI();});
  
-// ==================== TABS ====================
-document.querySelectorAll('.nav-tab').forEach(tab=>{tab.addEventListener('click',()=>switchTab(tab.dataset.tab));});
+// TABS
+document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
 function switchTab(n){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.querySelector(`.nav-tab[data-tab="${n}"]`).classList.add('active');document.getElementById('tab-'+n).classList.add('active');if(n==='termine')renderTermine();if(n==='aufnahme')checkSetup();}
 function checkSetup(){document.getElementById('setup-banner').style.display=(!settings.apiKey||!settings.workerUrl)?'block':'none';}
  
-// ==================== GOOGLE AUTH ====================
+// iOS TTS FIX: unlock speechSynthesis on first user tap
+function unlockTTS(){
+  if(ttsUnlocked)return;
+  const u=new SpeechSynthesisUtterance('');
+  u.volume=0;u.rate=1;
+  speechSynthesis.speak(u);
+  ttsUnlocked=true;
+}
+ 
+// Speak text (works on iOS after unlock)
+function speakText(text){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel(); // cancel any pending
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='de-DE';u.rate=0.95;u.volume=1;
+  speechSynthesis.speak(u);
+}
+ 
+// Mic click handler: unlock TTS + toggle recording
+function handleMicClick(){
+  unlockTTS();
+  if(!settings.apiKey||!settings.workerUrl){switchTab('settings');return;}
+  if(isRecording)stopRecording();else startRecording();
+}
+ 
+// GOOGLE AUTH
 function initGoogleAuth(){if(!settings.googleClientId||typeof google==='undefined')return;tokenClient=google.accounts.oauth2.initTokenClient({client_id:settings.googleClientId,scope:'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',callback:handleGoogleToken});}
-function googleLogin(){if(!settings.googleClientId){alert('Erst Google Client-ID eingeben.');return;}if(!tokenClient)initGoogleAuth();if(!tokenClient){alert('Google nicht geladen. Seite neu laden.');return;}tokenClient.requestAccessToken();}
+function googleLogin(){if(!settings.googleClientId){alert('Erst Google Client-ID eingeben.');return;}if(!tokenClient)initGoogleAuth();if(!tokenClient){alert('Google nicht geladen.');return;}tokenClient.requestAccessToken();}
 async function handleGoogleToken(r){if(r.error){alert('Fehler: '+(r.error_description||r.error));return;}googleAccessToken=r.access_token;googleTokenExpiry=Date.now()+(r.expires_in*1000);localStorage.setItem('googleAccessToken',googleAccessToken);localStorage.setItem('googleTokenExpiry',googleTokenExpiry.toString());try{const res=await fetch('https://www.googleapis.com/oauth2/v2/userinfo',{headers:{'Authorization':'Bearer '+googleAccessToken}});const d=await res.json();googleUserName=d.name||d.email||'User';googleUserEmail=d.email||'';localStorage.setItem('googleUserName',googleUserName);localStorage.setItem('googleUserEmail',googleUserEmail);}catch(e){}updateGoogleUI();checkSetup();}
 function googleLogout(){if(googleAccessToken&&typeof google!=='undefined')try{google.accounts.oauth2.revoke(googleAccessToken);}catch(e){}googleAccessToken='';googleTokenExpiry=0;googleUserName='';googleUserEmail='';['googleAccessToken','googleTokenExpiry','googleUserName','googleUserEmail'].forEach(k=>localStorage.removeItem(k));updateGoogleUI();}
 function updateGoogleUI(){const ok=googleAccessToken&&Date.now()<googleTokenExpiry;document.getElementById('google-logged-out').style.display=ok?'none':'block';document.getElementById('google-logged-in').style.display=ok?'block':'none';if(ok){document.getElementById('google-name').textContent=googleUserName;document.getElementById('google-email').textContent=googleUserEmail;document.getElementById('google-avatar').textContent=(googleUserName||'?')[0].toUpperCase();}}
 async function ensureGoogleToken(){if(!googleAccessToken||Date.now()>=googleTokenExpiry){return new Promise((res,rej)=>{if(!tokenClient)initGoogleAuth();if(!tokenClient){rej(new Error('Google nicht konfiguriert'));return;}tokenClient.callback=(r)=>{handleGoogleToken(r);r.error?rej(new Error(r.error)):res();};tokenClient.requestAccessToken();});}}
  
-// ==================== GOOGLE CALENDAR API ====================
+// GOOGLE CALENDAR
 async function createGoogleEvent(t){
-  await ensureGoogleToken();
-  const s=new Date(t.datum+'T'+t.uhrzeit+':00'),e=new Date(s.getTime()+3600000);
-  const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const mins=t.erinnerung||settings.defaultReminder||15;
-  const ev={summary:t.titel,location:t.ort||undefined,description:t.notiz||undefined,
-    start:{dateTime:s.toISOString(),timeZone:tz},end:{dateTime:e.toISOString(),timeZone:tz},
-    reminders:{useDefault:false,overrides:[{method:'popup',minutes:mins}]}};
-  const r=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events',{method:'POST',headers:{'Authorization':'Bearer '+googleAccessToken,'Content-Type':'application/json'},body:JSON.stringify(ev)});
+  await ensureGoogleToken();const s=new Date(t.datum+'T'+t.uhrzeit+':00'),e=new Date(s.getTime()+3600000);
+  const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;const mins=t.erinnerung||settings.defaultReminder||15;
+  const r=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events',{method:'POST',headers:{'Authorization':'Bearer '+googleAccessToken,'Content-Type':'application/json'},
+    body:JSON.stringify({summary:t.titel,location:t.ort||undefined,description:t.notiz||undefined,start:{dateTime:s.toISOString(),timeZone:tz},end:{dateTime:e.toISOString(),timeZone:tz},reminders:{useDefault:false,overrides:[{method:'popup',minutes:mins}]}})});
   if(!r.ok)throw new Error('Google Error: '+r.status);return(await r.json()).id;
 }
-async function updateGoogleEvent(t){
-  if(!t.googleEventId)return;await ensureGoogleToken();
-  const s=new Date(t.datum+'T'+t.uhrzeit+':00'),e=new Date(s.getTime()+3600000);
-  const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const mins=t.erinnerung||settings.defaultReminder||15;
+async function updateGoogleEvent(t){if(!t.googleEventId)return;await ensureGoogleToken();const s=new Date(t.datum+'T'+t.uhrzeit+':00'),e=new Date(s.getTime()+3600000);const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;const mins=t.erinnerung||settings.defaultReminder||15;
   await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events/'+t.googleEventId,{method:'PUT',headers:{'Authorization':'Bearer '+googleAccessToken,'Content-Type':'application/json'},
-    body:JSON.stringify({summary:t.titel,location:t.ort||undefined,description:t.notiz||undefined,start:{dateTime:s.toISOString(),timeZone:tz},end:{dateTime:e.toISOString(),timeZone:tz},reminders:{useDefault:false,overrides:[{method:'popup',minutes:mins}]}})});
-}
+    body:JSON.stringify({summary:t.titel,location:t.ort||undefined,description:t.notiz||undefined,start:{dateTime:s.toISOString(),timeZone:tz},end:{dateTime:e.toISOString(),timeZone:tz},reminders:{useDefault:false,overrides:[{method:'popup',minutes:mins}]}})});}
 async function deleteGoogleEvent(t){if(!t.googleEventId)return;await ensureGoogleToken();await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events/'+t.googleEventId,{method:'DELETE',headers:{'Authorization':'Bearer '+googleAccessToken}});}
  
-// ==================== CHECK FUNCTIONS ====================
-function checkApiKey(){const el=document.getElementById('check-apikey'),k=settings.apiKey;if(!k){el.textContent='Kein Key';el.className='check-result fail';return;}if(!k.startsWith('sk-')){el.textContent='Muss mit sk- beginnen';el.className='check-result fail';return;}if(k.length<20){el.textContent='Zu kurz';el.className='check-result fail';return;}el.textContent='Format OK ✓';el.className='check-result ok';}
-async function checkWorkerUrl(){const el=document.getElementById('check-worker'),url=settings.workerUrl;if(!url){el.textContent='Keine URL';el.className='check-result fail';return;}if(!url.startsWith('https://')){el.textContent='Muss mit https:// beginnen';el.className='check-result fail';return;}el.textContent='Teste...';el.className='check-result wait';try{const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({apiKey:settings.apiKey||'test',model:'claude-sonnet-4-20250514',max_tokens:10,system:'Sag OK',messages:[{role:'user',content:'Test'}]})});const d=await r.json();if(d.content){el.textContent='Verbindung OK ✓';el.className='check-result ok';}else if(d.error){el.textContent='Worker OK, API: '+(d.error.message||'Fehler');el.className='check-result fail';}else{el.textContent='Unerwartete Antwort';el.className='check-result fail';}}catch(e){el.textContent='Nicht erreichbar';el.className='check-result fail';}}
-function checkGoogleClientId(){const el=document.getElementById('check-google-client'),id=settings.googleClientId;if(!id){el.textContent='Keine ID';el.className='check-result fail';return;}if(!id.includes('.apps.googleusercontent.com')){el.textContent='Muss auf .apps.googleusercontent.com enden';el.className='check-result fail';return;}if(typeof google==='undefined'){el.textContent='Format OK, Google SDK lädt...';el.className='check-result wait';return;}try{tokenClient=google.accounts.oauth2.initTokenClient({client_id:id,scope:'https://www.googleapis.com/auth/calendar.events',callback:()=>{}});el.textContent='Format OK ✓';el.className='check-result ok';}catch(e){el.textContent='Fehler: '+e.message;el.className='check-result fail';}}
+// CHECKS
+function checkApiKey(){const el=document.getElementById('check-apikey'),k=settings.apiKey;if(!k){el.textContent='Kein Key';el.className='check-result fail';return;}if(!k.startsWith('sk-')){el.textContent='Muss mit sk- beginnen';el.className='check-result fail';return;}el.textContent='Format OK ✓';el.className='check-result ok';}
+async function checkWorkerUrl(){const el=document.getElementById('check-worker'),url=settings.workerUrl;if(!url){el.textContent='Keine URL';el.className='check-result fail';return;}if(!url.startsWith('https://')){el.textContent='https:// fehlt';el.className='check-result fail';return;}el.textContent='Teste...';el.className='check-result wait';try{const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({apiKey:settings.apiKey||'test',model:'claude-sonnet-4-20250514',max_tokens:10,system:'Sag OK',messages:[{role:'user',content:'Test'}]})});const d=await r.json();if(d.content){el.textContent='OK ✓';el.className='check-result ok';}else{el.textContent='Worker OK, API: '+(d.error?.message||'Fehler');el.className='check-result fail';}}catch(e){el.textContent='Nicht erreichbar';el.className='check-result fail';}}
+function checkGoogleClientId(){const el=document.getElementById('check-google-client'),id=settings.googleClientId;if(!id){el.textContent='Keine ID';el.className='check-result fail';return;}if(!id.includes('.apps.googleusercontent.com')){el.textContent='Muss auf .apps.googleusercontent.com enden';el.className='check-result fail';return;}if(typeof google==='undefined'){el.textContent='Format OK, SDK lädt...';el.className='check-result wait';return;}try{tokenClient=google.accounts.oauth2.initTokenClient({client_id:id,scope:'https://www.googleapis.com/auth/calendar.events',callback:()=>{}});el.textContent='Format OK ✓';el.className='check-result ok';}catch(e){el.textContent='Fehler';el.className='check-result fail';}}
  
-// ==================== MIC ====================
-async function checkMicPermission(){if(!speechApiAvailable){showFallback('Spracherkennung nicht unterstützt.');return;}if(navigator.permissions&&navigator.permissions.query){try{const r=await navigator.permissions.query({name:'microphone'});if(r.state==='granted'){micAvailable=true;hideBanner();}else if(r.state==='denied'){micAvailable=false;showFallback('Mikrofon blockiert.');}else showBanner();r.addEventListener('change',()=>{if(r.state==='granted'){micAvailable=true;hideBanner();}else if(r.state==='denied'){micAvailable=false;showFallback('Mikrofon blockiert.');}});}catch(e){}}}
-async function requestMicPermission(){try{const s=await navigator.mediaDevices.getUserMedia({audio:true});s.getTracks().forEach(t=>t.stop());micAvailable=true;hideBanner();setStatus('Mikrofon erlaubt!',false);}catch(e){micAvailable=false;showFallback('Mikrofon verweigert.');}}
+// MIC
+async function checkMicPermission(){if(!speechApiAvailable){showFallback('Spracherkennung nicht unterstützt.');return;}if(navigator.permissions&&navigator.permissions.query){try{const r=await navigator.permissions.query({name:'microphone'});if(r.state==='granted'){micAvailable=true;hideBanner();}else if(r.state==='denied'){micAvailable=false;showFallback('Mikrofon blockiert.');}else showBanner();r.addEventListener('change',()=>{if(r.state==='granted'){micAvailable=true;hideBanner();}else if(r.state==='denied'){micAvailable=false;showFallback('Blockiert.');}});}catch(e){}}}
+async function requestMicPermission(){unlockTTS();try{const s=await navigator.mediaDevices.getUserMedia({audio:true});s.getTracks().forEach(t=>t.stop());micAvailable=true;hideBanner();setStatus('Mikrofon erlaubt!',false);}catch(e){micAvailable=false;showFallback('Verweigert.');}}
 function showBanner(){document.getElementById('mic-permission-banner').style.display='flex';}
 function hideBanner(){document.getElementById('mic-permission-banner').style.display='none';document.getElementById('fallback-box').style.display='none';document.getElementById('mic-btn').classList.remove('disabled');}
 function showFallback(m){document.getElementById('mic-permission-banner').style.display='none';document.getElementById('fallback-box').style.display='flex';document.getElementById('mic-btn').classList.add('disabled');if(m)setStatus(m,false,true);}
  
-// ==================== SETTINGS ====================
+// SETTINGS
 function loadAllSettings(){document.getElementById('input-apikey').value=settings.apiKey||'';document.getElementById('input-worker-url').value=settings.workerUrl||'';document.getElementById('input-google-client-id').value=settings.googleClientId||'';document.getElementById('slider-reminder').value=settings.defaultReminder||15;updateReminderSlider();}
 function saveAllSettings(){settings.apiKey=document.getElementById('input-apikey').value.trim();settings.workerUrl=document.getElementById('input-worker-url').value.trim().replace(/\/$/,'');settings.googleClientId=document.getElementById('input-google-client-id').value.trim();localStorage.setItem('settings',JSON.stringify(settings));checkSetup();tokenClient=null;if(settings.googleClientId)initGoogleAuth();}
-function updateReminderSlider(){const v=parseInt(document.getElementById('slider-reminder').value);settings.defaultReminder=v;localStorage.setItem('settings',JSON.stringify(settings));const el=document.getElementById('slider-reminder-value');if(v>=60)el.textContent=Math.floor(v/60)+'h '+(v%60?v%60+'m':'');else el.textContent=v+' Min';}
+function updateReminderSlider(){const v=parseInt(document.getElementById('slider-reminder').value);settings.defaultReminder=v;localStorage.setItem('settings',JSON.stringify(settings));const el=document.getElementById('slider-reminder-value');el.textContent=v>=60?Math.floor(v/60)+'h'+(v%60?' '+v%60+'m':''):v+' Min';}
 function initSettings(){document.getElementById('toggle-confirm').className='toggle '+(settings.confirmBefore?'on':'off');document.getElementById('toggle-readback').className='toggle '+(settings.readBack?'on':'off');document.getElementById('cal-apple').classList.toggle('active',settings.calendar==='apple');document.getElementById('cal-google').classList.toggle('active',settings.calendar==='google');}
 function toggleSetting(k){settings[k]=!settings[k];localStorage.setItem('settings',JSON.stringify(settings));initSettings();}
 function setCalendar(t){settings.calendar=t;localStorage.setItem('settings',JSON.stringify(settings));initSettings();}
  
-// ==================== SPEECH ====================
-function toggleRecording(){if(!settings.apiKey||!settings.workerUrl){switchTab('settings');return;}if(isRecording)stopRecording();else startRecording();}
+// SPEECH
 async function startRecording(){
   if(!speechApiAvailable){showFallback('Nicht unterstützt.');return;}
   if(micAvailable===false){showFallback('Blockiert.');return;}
@@ -359,18 +315,23 @@ async function startRecording(){
   recognition.onend=()=>{if(isRecording)try{recognition.start();}catch(e){}};
   try{recognition.start();isRecording=true;updateMicButton();setStatus('Ich höre zu...',false);document.getElementById('aufnahme-text').textContent='Ich höre zu...';document.getElementById('pending-list').style.display='none';document.getElementById('fallback-box').style.display='none';}catch(e){showFallback('Konnte nicht starten.');}
 }
-async function stopRecording(){isRecording=false;if(recognition){recognition.onend=null;try{recognition.stop();}catch(e){}recognition=null;}updateMicButton();document.getElementById('aufnahme-text').textContent='Tippe auf das Mikrofon\nund erzähl mir von deinem Termin';if(transcript.trim()){setStatus('Verarbeite...',true);await processWithAI(transcript.trim());}else setStatus('Kein Text erkannt.',false);}
-async function submitFallbackText(){if(!settings.apiKey||!settings.workerUrl){switchTab('settings');return;}const t=document.getElementById('fallback-textarea').value.trim();if(!t){setStatus('Bitte Text eingeben.',false,true);return;}setStatus('Verarbeite...',true);await processWithAI(t);document.getElementById('fallback-textarea').value='';}
+async function stopRecording(){
+  isRecording=false;if(recognition){recognition.onend=null;try{recognition.stop();}catch(e){}recognition=null;}
+  updateMicButton();document.getElementById('aufnahme-text').textContent='Tippe auf das Mikrofon\nund erzähl mir von deinem Termin';
+  if(transcript.trim()){setStatus('Verarbeite...',true);await processWithAI(transcript.trim());}
+  else setStatus('Kein Text erkannt.',false);
+}
+async function submitFallbackText(){unlockTTS();if(!settings.apiKey||!settings.workerUrl){switchTab('settings');return;}const t=document.getElementById('fallback-textarea').value.trim();if(!t){setStatus('Bitte Text eingeben.',false,true);return;}setStatus('Verarbeite...',true);await processWithAI(t);document.getElementById('fallback-textarea').value='';}
 function updateMicButton(){const b=document.getElementById('mic-btn');if(isRecording){b.classList.add('recording');b.classList.remove('disabled');document.getElementById('mic-icon').style.display='none';document.getElementById('stop-icon').style.display='block';}else{b.classList.remove('recording');document.getElementById('mic-icon').style.display='block';document.getElementById('stop-icon').style.display='none';}}
 function setStatus(t,p,e){const el=document.getElementById('status');el.textContent=(p?'⏳ ':'')+t;el.className='status'+(p?' processing':'')+(e?' error':'');}
 function showTranscript(t){const b=document.getElementById('transcript-box');if(t){b.style.display='block';document.getElementById('transcript-text').textContent=t;}else b.style.display='none';}
  
-// ==================== AI ====================
+// AI
 async function processWithAI(text){
   try{
     const today=new Date(),dateStr=today.toISOString().split('T')[0];
     const dayNames=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
-    const defReminder=settings.defaultReminder||15;
+    const defR=settings.defaultReminder||15;
     const r=await fetch(settings.workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({apiKey:settings.apiKey,model:'claude-sonnet-4-20250514',max_tokens:1000,
         system:`Du bist ein Termin-Assistent. Heute ist ${dayNames[today.getDay()]}, ${dateStr}.
@@ -379,28 +340,48 @@ Extrahiere alle Termine aus dem Text. Antworte NUR mit einem JSON-Array (keine B
  
 Format: [{"titel":"...","datum":"YYYY-MM-DD","uhrzeit":"HH:MM","ort":"...","notiz":"...","erinnerung":MINUTEN}]
  
-Regeln für "erinnerung" (Zahl in Minuten, wie lange VOR dem Termin die Erinnerung kommen soll):
-- Wenn der Nutzer eine Erinnerungszeit nennt (z.B. "erinner mich 1 Stunde vorher"), berechne die Minuten (60).
-- Wenn der Nutzer eine Fahrtzeit/Anfahrt nennt (z.B. "30 Minuten Fahrt", "eine halbe Stunde entfernt", "45 min mit dem Auto"), nutze diese als Erinnerungszeit (30, 30, 45).
-- Wenn der Nutzer eine Vorbereitungszeit nennt (z.B. "brauche 20 Minuten zum Fertigmachen"), addiere das zur Erinnerung.
-- Wenn der Nutzer NICHTS zur Erinnerung sagt, setze erinnerung auf ${defReminder}.
-- Kombiniere Fahrtzeit + Vorbereitungszeit wenn beides genannt wird.
+WICHTIG für "titel":
+- Der Titel soll KURZ und NÜTZLICH sein – nur die wichtigsten Infos für eine Benachrichtigung.
+- Verwende den Namen der Person oder den Kernpunkt des Termins.
+- Füge wichtige Dinge zum Mitnehmen/Erledigen mit Bindestrich hinzu.
+- Beispiele:
+  "Treffe Jens um 21:30, muss Hose mitnehmen" → titel: "Jens – Hose mitnehmen"
+  "Zahnarzt Dr. Müller in Cloppenburg" → titel: "Zahnarzt Dr. Müller"
+  "Meeting mit Chef wegen Gehaltserhöhung" → titel: "Meeting Chef – Gehalt"
+  "Wohnungsbesichtigung in Hamburg, Unterlagen mitnehmen" → titel: "Besichtigung Hamburg – Unterlagen"
+  "Paket bei DHL abholen, Personalausweis nicht vergessen" → titel: "DHL Paket – Personalausweis"
  
-Kein Ort = "". Keine Uhrzeit = "09:00". Relative Daten korrekt berechnen.`,
+Regeln für "erinnerung" (Minuten VOR dem Termin):
+- "erinner mich 1 Stunde vorher" → 60
+- "30 Minuten Fahrt" / "halbe Stunde entfernt" → 30
+- "45 min mit dem Auto" → 45
+- Fahrtzeit + Vorbereitungszeit kombinieren wenn beides genannt
+- Wenn NICHTS zur Erinnerung gesagt wird → ${defR}
+ 
+Kein Ort = "". Keine Uhrzeit = "09:00". Relative Daten korrekt berechnen.
+Bei "notiz": sonstige Details die nicht in den Titel passen.`,
         messages:[{role:'user',content:text}]})});
     const data=await r.json();
     if(data.error){setStatus('API-Fehler: '+(data.error.message||''),false,true);return;}
     let parsed;
     try{parsed=JSON.parse((data.content?.[0]?.text||'[]').replace(/```json|```/g,'').trim());}catch(e){setStatus('Nicht verarbeitbar.',false,true);return;}
     if(!Array.isArray(parsed)||!parsed.length){setStatus('Keine Termine erkannt.',false);return;}
-    const newTermine=parsed.map(t=>({id:idCounter++,titel:t.titel||'Termin',datum:t.datum||dateStr,uhrzeit:t.uhrzeit||'09:00',ort:t.ort||'',notiz:t.notiz||'',erinnerung:t.erinnerung||defReminder,googleEventId:null}));
+    const newTermine=parsed.map(t=>({id:idCounter++,titel:t.titel||'Termin',datum:t.datum||dateStr,uhrzeit:t.uhrzeit||'09:00',ort:t.ort||'',notiz:t.notiz||'',erinnerung:t.erinnerung||defR,googleEventId:null}));
     localStorage.setItem('idCounter',idCounter.toString());
-    if(settings.readBack&&'speechSynthesis'in window){
-      const msg=newTermine.map(t=>`${t.titel} am ${formatDateLong(t.datum)} um ${t.uhrzeit}${t.ort?' in '+t.ort:''}, Erinnerung ${formatReminder(t.erinnerung)} vorher`).join('. ');
-      const u=new SpeechSynthesisUtterance(msg);u.lang='de-DE';u.rate=0.95;speechSynthesis.speak(u);
+ 
+    // VORLESEN
+    if(settings.readBack){
+      const msg=newTermine.map(t=>`${t.titel}, am ${formatDateLong(t.datum)} um ${t.uhrzeit}${t.ort?', in '+t.ort:''}. Erinnerung ${formatReminder(t.erinnerung)} vorher.`).join(' ');
+      speakText(msg);
     }
-    if(settings.confirmBefore){pendingTermine=newTermine;showPending();setStatus(newTermine.length+' Termin(e) erkannt – bestätigen?',false);}
-    else await saveNewTermine(newTermine);
+ 
+    // SAVE: if confirmBefore is OFF, save immediately without any confirmation step
+    if(!settings.confirmBefore){
+      await saveNewTermine(newTermine);
+    } else {
+      pendingTermine=newTermine;showPending();
+      setStatus(newTermine.length+' Termin(e) erkannt – bestätigen?',false);
+    }
   }catch(e){console.error(e);setStatus('Verbindungsfehler.',false,true);}
 }
  
@@ -411,11 +392,18 @@ async function saveNewTermine(items){
   }
   termine.push(...items);saveTermine();
   const synced=items.filter(t=>t.googleEventId).length;
-  if(settings.calendar==='google'&&synced>0){setStatus(synced+' Termin(e) im Google Kalender erstellt!',false);document.getElementById('status').classList.add('success');}
-  else setStatus(items.length+' Termin(e) gespeichert!',false);
+  if(settings.calendar==='google'&&synced>0){
+    setStatus(synced+' Termin(e) im Google Kalender erstellt!',false);
+    document.getElementById('status').className='status success';
+    // Also speak confirmation if readback is on
+    if(settings.readBack)speakText(synced+' Termin erfolgreich gespeichert.');
+  }else{
+    setStatus(items.length+' Termin(e) gespeichert!',false);
+    if(settings.readBack)speakText(items.length+' Termin gespeichert.');
+  }
 }
  
-// ==================== PENDING ====================
+// PENDING
 function showPending(){
   document.getElementById('pending-cards').innerHTML=pendingTermine.map(t=>`
     <div class="pending-card"><div class="pending-title">${esc(t.titel)}</div>
@@ -424,9 +412,9 @@ function showPending(){
   document.getElementById('pending-list').style.display='flex';
 }
 async function confirmPending(){document.getElementById('pending-list').style.display='none';await saveNewTermine(pendingTermine);pendingTermine=[];}
-function rejectPending(){pendingTermine=[];document.getElementById('pending-list').style.display='none';setStatus('Verworfen.',false);}
+function rejectPending(){pendingTermine=[];document.getElementById('pending-list').style.display='none';setStatus('Verworfen.',false);if(settings.readBack)speakText('Termine verworfen.');}
  
-// ==================== TERMINE ====================
+// TERMINE
 function renderTermine(){
   const list=document.getElementById('termine-list');
   if(!termine.length){list.innerHTML='<div class="empty-state">Noch keine Termine.\nGeh zur Aufnahme und erzähl mir davon!</div>';return;}
@@ -462,12 +450,9 @@ function editTermin(id){
 }
 async function saveEdit(id){
   const t=termine.find(x=>x.id===id);if(!t)return;
-  t.titel=document.getElementById('edit-titel-'+id).value||t.titel;
-  t.datum=document.getElementById('edit-datum-'+id).value||t.datum;
-  t.uhrzeit=document.getElementById('edit-uhrzeit-'+id).value||t.uhrzeit;
-  t.ort=document.getElementById('edit-ort-'+id).value;
-  t.notiz=document.getElementById('edit-notiz-'+id).value;
-  t.erinnerung=parseInt(document.getElementById('edit-erinnerung-'+id).value)||15;
+  t.titel=document.getElementById('edit-titel-'+id).value||t.titel;t.datum=document.getElementById('edit-datum-'+id).value||t.datum;
+  t.uhrzeit=document.getElementById('edit-uhrzeit-'+id).value||t.uhrzeit;t.ort=document.getElementById('edit-ort-'+id).value;
+  t.notiz=document.getElementById('edit-notiz-'+id).value;t.erinnerung=parseInt(document.getElementById('edit-erinnerung-'+id).value)||15;
   if(t.googleEventId&&settings.calendar==='google'){try{await updateGoogleEvent(t);}catch(e){}}
   saveTermine();renderTermine();
 }
@@ -477,26 +462,18 @@ async function deleteTermin(id){
   termine=termine.filter(x=>x.id!==id);saveTermine();renderTermine();
 }
  
-// ==================== APPLE CALENDAR ====================
-function makeICS(items){
-  return'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//TerminApp//DE\r\n'+items.map(t=>{
-    const s=new Date(t.datum+'T'+t.uhrzeit+':00'),e=new Date(s.getTime()+3600000);
-    const f=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
-    const mins=t.erinnerung||settings.defaultReminder||15;
-    return['BEGIN:VEVENT','DTSTART:'+f(s),'DTEND:'+f(e),'SUMMARY:'+t.titel,t.ort?'LOCATION:'+t.ort:'',t.notiz?'DESCRIPTION:'+t.notiz:'','BEGIN:VALARM','TRIGGER:-PT'+mins+'M','ACTION:DISPLAY','DESCRIPTION:'+t.titel,'END:VALARM','END:VEVENT'].filter(Boolean).join('\r\n');
-  }).join('\r\n')+'\r\nEND:VCALENDAR';
-}
+// APPLE CALENDAR
+function makeICS(items){return'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//TerminApp//DE\r\n'+items.map(t=>{const s=new Date(t.datum+'T'+t.uhrzeit+':00'),e=new Date(s.getTime()+3600000);const f=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');const mins=t.erinnerung||settings.defaultReminder||15;return['BEGIN:VEVENT','DTSTART:'+f(s),'DTEND:'+f(e),'SUMMARY:'+t.titel,t.ort?'LOCATION:'+t.ort:'',t.notiz?'DESCRIPTION:'+t.notiz:'','BEGIN:VALARM','TRIGGER:-PT'+mins+'M','ACTION:DISPLAY','DESCRIPTION:'+t.titel,'END:VALARM','END:VEVENT'].filter(Boolean).join('\r\n');}).join('\r\n')+'\r\nEND:VCALENDAR';}
 function downloadICS(ics,fn){const b=new Blob([ics],{type:'text/calendar'}),u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);}
 function exportOne(id){const t=termine.find(x=>x.id===id);if(t)downloadICS(makeICS([t]),t.titel.replace(/\s+/g,'_')+'.ics');}
  
-// ==================== HELPERS ====================
+// HELPERS
 function saveTermine(){localStorage.setItem('termine',JSON.stringify(termine));}
 function formatDate(s){const d=new Date(s+'T00:00:00');return['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()]+', '+d.getDate()+'. '+['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][d.getMonth()];}
 function formatDateLong(s){const d=new Date(s+'T00:00:00');return d.getDate()+'. '+['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'][d.getMonth()];}
-function formatReminder(mins){if(!mins)return'15 Min';if(mins>=60){const h=Math.floor(mins/60),m=mins%60;return h+'h'+(m?' '+m+'min':'');}return mins+' Min';}
+function formatReminder(m){if(!m)return'15 Min';if(m>=60){const h=Math.floor(m/60),r=m%60;return h+'h'+(r?' '+r+'min':'');}return m+' Min';}
 function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
 setTimeout(()=>{if(settings.googleClientId)initGoogleAuth();},1000);
 </script>
 </body>
 </html>
- 
