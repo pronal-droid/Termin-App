@@ -83,7 +83,7 @@
 
   .edit-card { background: #1c1c1e; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
   .edit-row { display: flex; gap: 8px; }
-  input[type="text"], input[type="date"], input[type="time"] {
+  input[type="text"], input[type="date"], input[type="time"], input[type="password"] {
     background: #2c2c2e; border: 1px solid #3a3a3c; border-radius: 8px;
     padding: 8px 12px; font-size: 14px; color: #fff; outline: none; width: 100%;
   }
@@ -98,15 +98,21 @@
   .btn:active { opacity: 0.8; }
   .btn-primary { background: #4a7aff; }
   .btn-secondary { background: #555; }
+  .btn-danger { background: #e24b4a; }
   .btn-export {
     background: #4a7aff; width: 100%; margin-bottom: 6px;
     display: flex; align-items: center; justify-content: center; gap: 6px;
   }
 
   .settings-title { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+  .settings-section-title { font-size: 13px; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
   .setting-row {
     display: flex; justify-content: space-between; align-items: center;
     background: #1c1c1e; border-radius: 12px; padding: 14px 16px;
+  }
+  .setting-block {
+    background: #1c1c1e; border-radius: 12px; padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 8px;
   }
   .setting-label { font-size: 14px; }
   .setting-desc { font-size: 12px; color: #666; margin-top: 2px; }
@@ -133,6 +139,12 @@
   .cal-option-label { font-size: 12px; color: #aaa; }
   .cal-option.active .cal-option-label { color: #fff; }
 
+  .api-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; margin-top: 4px; }
+  .api-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .api-dot.green { background: #34a853; }
+  .api-dot.red { background: #e24b4a; }
+  .api-dot.gray { background: #555; }
+
   .divider { height: 1px; background: #2c2c2e; margin: 8px 0; }
   .settings-info { font-size: 12px; color: #555; line-height: 1.5; }
   .tab-content { display: none; }
@@ -143,6 +155,13 @@
     display: flex; flex-direction: column; gap: 10px; align-items: center;
   }
   .mic-permission-banner p { font-size: 13px; color: #888; text-align: center; line-height: 1.5; }
+
+  /* API key setup banner on Aufnahme tab */
+  .setup-banner {
+    width: 100%; background: #2a1a0a; border: 1px solid #4a3520; border-radius: 12px;
+    padding: 14px; text-align: center;
+  }
+  .setup-banner p { font-size: 13px; color: #cca050; line-height: 1.5; margin-bottom: 8px; }
 </style>
 </head>
 <body>
@@ -159,8 +178,14 @@
   <!-- AUFNAHME TAB -->
   <div id="tab-aufnahme" class="tab-content active">
     <div class="aufnahme">
+      <!-- Setup needed banner -->
+      <div class="setup-banner" id="setup-banner" style="display:none">
+        <p>Bitte gib zuerst deinen API-Key und Worker-URL in den Einstellungen (⚙) ein.</p>
+        <button class="btn btn-primary" onclick="switchTab('settings')">Zu den Einstellungen</button>
+      </div>
+
       <div class="mic-permission-banner" id="mic-permission-banner" style="display:none">
-        <p>Die App braucht Zugriff auf dein Mikrofon, um Sprache zu erkennen.</p>
+        <p>Die App braucht Zugriff auf dein Mikrofon.</p>
         <button class="btn btn-primary" onclick="requestMicPermission()">Mikrofon erlauben</button>
       </div>
 
@@ -210,6 +235,34 @@ und erzähl mir von deinem Termin</div>
     <div style="display:flex;flex-direction:column;gap:16px;padding-top:8px;">
       <div class="settings-title">Einstellungen</div>
 
+      <!-- API Key Section -->
+      <div class="settings-section-title">API-Verbindung</div>
+      <div class="setting-block">
+        <div class="setting-label">Anthropic API-Key</div>
+        <div class="setting-desc">Dein Key wird nur lokal auf diesem Gerät gespeichert.</div>
+        <input type="password" id="input-apikey" placeholder="sk-ant-..." oninput="saveApiSettings()">
+        <div class="api-status" id="apikey-status">
+          <div class="api-dot gray"></div>
+          <span style="color:#666">Noch nicht eingerichtet</span>
+        </div>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label">Worker-URL</div>
+        <div class="setting-desc">Deine Cloudflare Worker URL (siehe Anleitung unten).</div>
+        <input type="text" id="input-worker-url" placeholder="https://termin-proxy.DEIN-NAME.workers.dev" oninput="saveApiSettings()">
+        <div class="api-status" id="worker-status">
+          <div class="api-dot gray"></div>
+          <span style="color:#666">Noch nicht eingerichtet</span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="testConnection()" style="align-self:flex-start;">Verbindung testen</button>
+
+      <div class="divider"></div>
+
+      <!-- Calendar choice -->
+      <div class="settings-section-title">Kalender</div>
       <div style="background:#1c1c1e;border-radius:12px;padding:14px 16px;">
         <div class="setting-label" style="margin-bottom:10px;">Kalender-App</div>
         <div class="cal-selector">
@@ -235,6 +288,9 @@ und erzähl mir von deinem Termin</div>
         </div>
       </div>
 
+      <div class="divider"></div>
+      <div class="settings-section-title">Verhalten</div>
+
       <div class="setting-row">
         <div>
           <div class="setting-label">Termine vorher bestätigen</div>
@@ -257,9 +313,11 @@ und erzähl mir von deinem Termin</div>
 
       <div class="divider"></div>
       <div class="settings-info">
-        <b>Apple Kalender:</b> Termine werden als .ics-Datei heruntergeladen und öffnen sich direkt in der Kalender-App.<br><br>
-        <b>Google Kalender:</b> Termine werden direkt über einen Link in Google Calendar geöffnet – du musst nur noch bestätigen.<br><br>
-        Falls das Mikrofon nicht funktioniert, erscheint automatisch ein Textfeld als Alternative.
+        <b>Einrichtung – so geht's:</b><br><br>
+        <b>1. API-Key:</b> Geh zu <a href="https://console.anthropic.com" target="_blank" style="color:#4a7aff;">console.anthropic.com</a>, erstelle einen Account und generiere unter "API Keys" einen neuen Key.<br><br>
+        <b>2. Cloudflare Worker:</b> Geh zu <a href="https://dash.cloudflare.com" target="_blank" style="color:#4a7aff;">dash.cloudflare.com</a>, erstelle einen kostenlosen Account und folge der Anleitung in der worker.js Datei.<br><br>
+        <b>Apple Kalender:</b> Exportiert als .ics-Datei.<br>
+        <b>Google Kalender:</b> Öffnet direkt Google Calendar.
       </div>
     </div>
   </div>
@@ -273,40 +331,53 @@ let recognition = null;
 let transcript = '';
 let finalTranscript = '';
 let idCounter = parseInt(localStorage.getItem('idCounter') || '1');
-let settings = JSON.parse(localStorage.getItem('settings') || '{"confirmBefore":true,"readBack":false,"calendar":"apple"}');
+let settings = JSON.parse(localStorage.getItem('settings') || '{"confirmBefore":true,"readBack":false,"calendar":"apple","apiKey":"","workerUrl":""}');
 let micAvailable = null;
 let speechApiAvailable = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 
 document.addEventListener('DOMContentLoaded', () => {
   initSettings();
+  loadApiSettings();
   checkMicPermission();
+  checkSetup();
 });
 
-// Tabs
+// ==================== TABS ====================
 document.querySelectorAll('.nav-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
-    if (tab.dataset.tab === 'termine') renderTermine();
-  });
+  tab.addEventListener('click', () => switchTab(tab.dataset.tab));
 });
+
+function switchTab(tabName) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.nav-tab[data-tab="${tabName}"]`).classList.add('active');
+  document.getElementById('tab-' + tabName).classList.add('active');
+  if (tabName === 'termine') renderTermine();
+  if (tabName === 'aufnahme') checkSetup();
+}
+
+// ==================== SETUP CHECK ====================
+function checkSetup() {
+  const banner = document.getElementById('setup-banner');
+  if (!settings.apiKey || !settings.workerUrl) {
+    banner.style.display = 'block';
+  } else {
+    banner.style.display = 'none';
+  }
+}
 
 // ==================== MIC PERMISSION ====================
 async function checkMicPermission() {
   if (!speechApiAvailable) {
-    showFallback('Dein Browser unterstützt keine Spracherkennung. Nutze das Textfeld unten.');
+    showFallback('Dein Browser unterstützt keine Spracherkennung. Nutze das Textfeld.');
     return;
   }
   if (navigator.permissions && navigator.permissions.query) {
     try {
       const result = await navigator.permissions.query({ name: 'microphone' });
       if (result.state === 'granted') { micAvailable = true; hideBanner(); }
-      else if (result.state === 'denied') {
-        micAvailable = false;
-        showFallback('Mikrofon blockiert. Erlaube es in den Browser-Einstellungen oder nutze das Textfeld.');
-      } else { showBanner(); }
+      else if (result.state === 'denied') { micAvailable = false; showFallback('Mikrofon blockiert.'); }
+      else { showBanner(); }
       result.addEventListener('change', () => {
         if (result.state === 'granted') { micAvailable = true; hideBanner(); }
         else if (result.state === 'denied') { micAvailable = false; showFallback('Mikrofon blockiert.'); }
@@ -319,12 +390,11 @@ async function requestMicPermission() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     stream.getTracks().forEach(t => t.stop());
-    micAvailable = true;
-    hideBanner();
-    setStatus('Mikrofon erlaubt! Tippe auf den Button.', false);
+    micAvailable = true; hideBanner();
+    setStatus('Mikrofon erlaubt!', false);
   } catch(e) {
     micAvailable = false;
-    showFallback('Mikrofon-Zugriff verweigert. Nutze das Textfeld, oder erlaube das Mikrofon in den Browser-Einstellungen.');
+    showFallback('Mikrofon verweigert. Nutze das Textfeld.');
   }
 }
 
@@ -348,6 +418,72 @@ function initSettings() {
   document.getElementById('cal-apple').classList.toggle('active', settings.calendar === 'apple');
   document.getElementById('cal-google').classList.toggle('active', settings.calendar === 'google');
 }
+
+function loadApiSettings() {
+  document.getElementById('input-apikey').value = settings.apiKey || '';
+  document.getElementById('input-worker-url').value = settings.workerUrl || '';
+  updateApiStatus();
+}
+
+function saveApiSettings() {
+  settings.apiKey = document.getElementById('input-apikey').value.trim();
+  settings.workerUrl = document.getElementById('input-worker-url').value.trim();
+  // Remove trailing slash
+  if (settings.workerUrl.endsWith('/')) settings.workerUrl = settings.workerUrl.slice(0, -1);
+  localStorage.setItem('settings', JSON.stringify(settings));
+  updateApiStatus();
+  checkSetup();
+}
+
+function updateApiStatus() {
+  const keyEl = document.getElementById('apikey-status');
+  const urlEl = document.getElementById('worker-status');
+  if (settings.apiKey && settings.apiKey.startsWith('sk-')) {
+    keyEl.innerHTML = '<div class="api-dot green"></div><span style="color:#34a853">Key gespeichert</span>';
+  } else if (settings.apiKey) {
+    keyEl.innerHTML = '<div class="api-dot red"></div><span style="color:#e24b4a">Key sollte mit sk- beginnen</span>';
+  } else {
+    keyEl.innerHTML = '<div class="api-dot gray"></div><span style="color:#666">Noch nicht eingerichtet</span>';
+  }
+  if (settings.workerUrl && settings.workerUrl.startsWith('https://')) {
+    urlEl.innerHTML = '<div class="api-dot green"></div><span style="color:#34a853">URL gespeichert</span>';
+  } else if (settings.workerUrl) {
+    urlEl.innerHTML = '<div class="api-dot red"></div><span style="color:#e24b4a">URL muss mit https:// beginnen</span>';
+  } else {
+    urlEl.innerHTML = '<div class="api-dot gray"></div><span style="color:#666">Noch nicht eingerichtet</span>';
+  }
+}
+
+async function testConnection() {
+  if (!settings.apiKey || !settings.workerUrl) {
+    alert('Bitte erst API-Key und Worker-URL eingeben.');
+    return;
+  }
+  try {
+    const resp = await fetch(settings.workerUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        apiKey: settings.apiKey,
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 50,
+        system: 'Antworte nur mit: OK',
+        messages: [{ role: 'user', content: 'Test' }]
+      })
+    });
+    const data = await resp.json();
+    if (data.content) {
+      alert('Verbindung erfolgreich! Alles funktioniert.');
+    } else if (data.error) {
+      alert('API-Fehler: ' + (data.error.message || JSON.stringify(data.error)));
+    } else {
+      alert('Unerwartete Antwort. Prüfe die Worker-URL.');
+    }
+  } catch(e) {
+    alert('Verbindungsfehler: ' + e.message + '\n\nPrüfe die Worker-URL.');
+  }
+}
+
 function toggleSetting(key) {
   settings[key] = !settings[key];
   localStorage.setItem('settings', JSON.stringify(settings));
@@ -361,6 +497,11 @@ function setCalendar(type) {
 
 // ==================== SPEECH ====================
 function toggleRecording() {
+  if (!settings.apiKey || !settings.workerUrl) {
+    switchTab('settings');
+    alert('Bitte erst API-Key und Worker-URL in den Einstellungen eingeben.');
+    return;
+  }
   if (isRecording) stopRecording();
   else startRecording();
 }
@@ -373,11 +514,10 @@ async function startRecording() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       stream.getTracks().forEach(t => t.stop());
-      micAvailable = true;
-      hideBanner();
+      micAvailable = true; hideBanner();
     } catch(e) {
       micAvailable = false;
-      showFallback('Mikrofon-Zugriff verweigert. Nutze das Textfeld.');
+      showFallback('Mikrofon verweigert. Nutze das Textfeld.');
       return;
     }
   }
@@ -387,9 +527,7 @@ async function startRecording() {
   recognition.lang = 'de-DE';
   recognition.continuous = true;
   recognition.interimResults = true;
-  recognition.maxAlternatives = 1;
-  finalTranscript = '';
-  transcript = '';
+  finalTranscript = ''; transcript = '';
 
   recognition.onresult = (event) => {
     let interim = '';
@@ -403,35 +541,27 @@ async function startRecording() {
   };
 
   recognition.onerror = (event) => {
-    console.error('Speech error:', event.error);
     if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-      micAvailable = false;
-      isRecording = false;
-      updateMicButton();
-      showFallback('Mikrofon blockiert.\n\niPhone: Einstellungen → Safari → Mikrofon → Erlauben\nDann Seite neu laden.\n\nOder nutze das Textfeld unten.');
+      micAvailable = false; isRecording = false; updateMicButton();
+      showFallback('Mikrofon blockiert. Einstellungen → Safari → Mikrofon → Erlauben.');
     } else if (event.error === 'network') {
-      setStatus('Netzwerkfehler. Prüfe deine Internetverbindung.', false, true);
-      isRecording = false;
-      updateMicButton();
+      setStatus('Netzwerkfehler.', false, true); isRecording = false; updateMicButton();
     } else if (event.error !== 'no-speech') {
       setStatus('Fehler: ' + event.error, false, true);
     }
   };
 
-  recognition.onend = () => {
-    if (isRecording) { try { recognition.start(); } catch(e) {} }
-  };
+  recognition.onend = () => { if (isRecording) { try { recognition.start(); } catch(e) {} } };
 
   try {
     recognition.start();
-    isRecording = true;
-    updateMicButton();
+    isRecording = true; updateMicButton();
     setStatus('Ich höre zu...', false);
     document.getElementById('aufnahme-text').textContent = 'Ich höre zu...';
     document.getElementById('pending-list').style.display = 'none';
     document.getElementById('fallback-box').style.display = 'none';
   } catch(e) {
-    showFallback('Spracherkennung konnte nicht gestartet werden.');
+    showFallback('Spracherkennung konnte nicht starten.');
   }
 }
 
@@ -444,17 +574,21 @@ async function stopRecording() {
     setStatus('Verarbeite...', true);
     await processWithAI(transcript.trim());
   } else {
-    setStatus('Kein Text erkannt. Versuch es nochmal.', false);
+    setStatus('Kein Text erkannt.', false);
   }
 }
 
 async function submitFallbackText() {
-  const textarea = document.getElementById('fallback-textarea');
-  const text = textarea.value.trim();
-  if (!text) { setStatus('Bitte gib einen Text ein.', false, true); return; }
+  if (!settings.apiKey || !settings.workerUrl) {
+    switchTab('settings');
+    alert('Bitte erst API-Key und Worker-URL eingeben.');
+    return;
+  }
+  const text = document.getElementById('fallback-textarea').value.trim();
+  if (!text) { setStatus('Bitte Text eingeben.', false, true); return; }
   setStatus('Verarbeite...', true);
   await processWithAI(text);
-  textarea.value = '';
+  document.getElementById('fallback-textarea').value = '';
 }
 
 function updateMicButton() {
@@ -482,31 +616,42 @@ function showTranscript(text) {
   else { box.style.display = 'none'; }
 }
 
-// ==================== AI ====================
+// ==================== AI (via Cloudflare Worker) ====================
 async function processWithAI(text) {
   try {
     const today = new Date();
     const dateStr = today.toISOString().split('T')[0];
     const dayNames = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(settings.workerUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        apiKey: settings.apiKey,
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
-        system: `Du bist ein Termin-Assistent. Heute ist ${dayNames[today.getDay()]}, ${dateStr}. Extrahiere alle Termine aus dem Text. Antworte NUR mit einem JSON-Array (keine Backticks, kein Markdown). Format: [{"titel":"...","datum":"YYYY-MM-DD","uhrzeit":"HH:MM","ort":"...","notiz":"..."}]. Kein Ort = "". Keine Uhrzeit = "09:00". Relative Daten (nächsten Montag etc.) korrekt berechnen.`,
+        system: `Du bist ein Termin-Assistent. Heute ist ${dayNames[today.getDay()]}, ${dateStr}. Extrahiere alle Termine aus dem Text. Antworte NUR mit einem JSON-Array (keine Backticks, kein Markdown). Format: [{"titel":"...","datum":"YYYY-MM-DD","uhrzeit":"HH:MM","ort":"...","notiz":"..."}]. Kein Ort = "". Keine Uhrzeit = "09:00". Relative Daten korrekt berechnen.`,
         messages: [{ role: 'user', content: text }]
       })
     });
 
     const data = await response.json();
-    if (data.error) { setStatus('API-Fehler: ' + (data.error.message || 'Unbekannt'), false, true); return; }
+    if (data.error) {
+      const msg = data.error.message || JSON.stringify(data.error);
+      if (msg.includes('invalid x-api-key') || msg.includes('authentication')) {
+        setStatus('API-Key ungültig. Prüfe ihn in den Einstellungen.', false, true);
+      } else if (msg.includes('credit') || msg.includes('billing')) {
+        setStatus('Kein API-Guthaben. Lade Credits auf console.anthropic.com auf.', false, true);
+      } else {
+        setStatus('API-Fehler: ' + msg, false, true);
+      }
+      return;
+    }
 
     const content = data.content?.[0]?.text || '[]';
     let parsed;
     try { parsed = JSON.parse(content.replace(/```json|```/g, '').trim()); } catch(e) {
-      setStatus('Konnte Antwort nicht verarbeiten.', false, true); return;
+      setStatus('Antwort konnte nicht verarbeitet werden.', false, true); return;
     }
 
     if (!Array.isArray(parsed) || parsed.length === 0) {
@@ -533,17 +678,15 @@ async function processWithAI(text) {
     }
 
     if (settings.confirmBefore) {
-      pendingTermine = newTermine;
-      showPending();
+      pendingTermine = newTermine; showPending();
       setStatus(newTermine.length + ' Termin(e) erkannt – bitte bestätigen', false);
     } else {
-      termine.push(...newTermine);
-      saveTermine();
+      termine.push(...newTermine); saveTermine();
       setStatus(newTermine.length + ' Termin(e) gespeichert!', false);
     }
   } catch(e) {
     console.error('AI error:', e);
-    setStatus('Fehler bei der Verarbeitung. Prüfe deine Internetverbindung.', false, true);
+    setStatus('Verbindungsfehler. Prüfe Worker-URL und Internetverbindung.', false, true);
   }
 }
 
@@ -553,32 +696,28 @@ function showPending() {
     <div class="pending-card">
       <div class="pending-title">${esc(t.titel)}</div>
       <div class="pending-sub">${formatDate(t.datum)} · ${t.uhrzeit}${t.ort ? ' · ' + esc(t.ort) : ''}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
   document.getElementById('pending-list').style.display = 'flex';
 }
 function confirmPending() {
   termine.push(...pendingTermine); saveTermine();
   setStatus(pendingTermine.length + ' Termin(e) gespeichert!', false);
-  pendingTermine = [];
-  document.getElementById('pending-list').style.display = 'none';
+  pendingTermine = []; document.getElementById('pending-list').style.display = 'none';
 }
 function rejectPending() {
-  pendingTermine = [];
-  document.getElementById('pending-list').style.display = 'none';
+  pendingTermine = []; document.getElementById('pending-list').style.display = 'none';
   setStatus('Verworfen.', false);
 }
 
 // ==================== TERMINE ====================
 function renderTermine() {
   const list = document.getElementById('termine-list');
-  if (termine.length === 0) {
+  if (!termine.length) {
     list.innerHTML = '<div class="empty-state">Noch keine Termine.\nGeh zur Aufnahme und erzähl mir davon!</div>';
     return;
   }
   const sorted = [...termine].sort((a,b) => (a.datum+a.uhrzeit).localeCompare(b.datum+b.uhrzeit));
   const calLabel = settings.calendar === 'google' ? 'Google Kalender' : 'Apple Kalender';
-
   list.innerHTML = `
     <button class="btn btn-export" onclick="exportAll()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -611,8 +750,7 @@ function renderTermine() {
             </svg>
           </button>
         </div>
-      </div>
-    `).join('')}`;
+      </div>`).join('')}`;
 }
 
 function editTermin(id) {
@@ -650,14 +788,14 @@ function deleteTermin(id) {
   saveTermine(); renderTermine();
 }
 
-// ==================== CALENDAR EXPORT ====================
+// ==================== CALENDAR ====================
 function makeICS(items) {
   const events = items.map(t => {
     const start = new Date(t.datum + 'T' + t.uhrzeit + ':00');
     const end = new Date(start.getTime() + 3600000);
     const fmt = d => d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
     return ['BEGIN:VEVENT','DTSTART:'+fmt(start),'DTEND:'+fmt(end),'SUMMARY:'+t.titel,
-      t.ort?'LOCATION:'+t.ort:'', t.notiz?'DESCRIPTION:'+t.notiz:'',
+      t.ort?'LOCATION:'+t.ort:'',t.notiz?'DESCRIPTION:'+t.notiz:'',
       'BEGIN:VALARM','TRIGGER:-PT15M','ACTION:DISPLAY','DESCRIPTION:'+t.titel,'END:VALARM',
       'END:VEVENT'].filter(Boolean).join('\r\n');
   }).join('\r\n');
@@ -667,22 +805,18 @@ function makeICS(items) {
 function downloadICS(ics, filename) {
   const blob = new Blob([ics], { type: 'text/calendar' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filename;
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a); URL.revokeObjectURL(url);
+  const a = document.createElement('a'); a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 
 function makeGoogleCalURL(t) {
   const start = new Date(t.datum + 'T' + t.uhrzeit + ':00');
   const end = new Date(start.getTime() + 3600000);
   const fmt = d => d.toISOString().replace(/[-:.]/g,'').replace(/\d{3}Z/,'Z');
-  const params = new URLSearchParams({
-    action: 'TEMPLATE', text: t.titel,
-    dates: fmt(start) + '/' + fmt(end),
-    details: t.notiz || '', location: t.ort || '',
-  });
-  return 'https://calendar.google.com/calendar/render?' + params.toString();
+  return 'https://calendar.google.com/calendar/render?' + new URLSearchParams({
+    action:'TEMPLATE', text:t.titel, dates:fmt(start)+'/'+fmt(end),
+    details:t.notiz||'', location:t.ort||''
+  }).toString();
 }
 
 function exportOne(id) {
@@ -695,24 +829,21 @@ function exportOne(id) {
 function exportAll() {
   if (!termine.length) return;
   if (settings.calendar === 'google') {
-    if (termine.length > 5 && !confirm(`${termine.length} Termine – für jeden wird ein Tab geöffnet. Fortfahren?`)) return;
+    if (termine.length > 5 && !confirm(termine.length + ' Tabs werden geöffnet. OK?')) return;
     termine.forEach(t => window.open(makeGoogleCalURL(t), '_blank'));
-  } else {
-    downloadICS(makeICS(termine), 'alle_termine.ics');
-  }
+  } else downloadICS(makeICS(termine), 'alle_termine.ics');
 }
 
 // ==================== HELPERS ====================
 function saveTermine() { localStorage.setItem('termine', JSON.stringify(termine)); }
-
 function formatDate(s) {
   const d = new Date(s+'T00:00:00');
-  return ['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()] + ', ' + d.getDate() + '. ' +
+  return ['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()]+', '+d.getDate()+'. '+
     ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][d.getMonth()];
 }
 function formatDateLong(s) {
   const d = new Date(s+'T00:00:00');
-  return d.getDate() + '. ' + ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'][d.getMonth()];
+  return d.getDate()+'. '+['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'][d.getMonth()];
 }
 function esc(s) { const d = document.createElement('div'); d.textContent = s||''; return d.innerHTML; }
 </script>
