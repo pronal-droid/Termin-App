@@ -47,13 +47,13 @@
   .status.fade-in{animation:fadeUp .4s ease}
   @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
  
-  /* Transcript - transparent, blends with background */
-  .transcript-box{width:100%;background:transparent;border-radius:0;padding:8px 4px;font-size:14px;color:#aaa;line-height:1.5;max-height:120px;overflow-y:auto;border-bottom:1px solid rgba(255,255,255,.06)}
-  .transcript-label{font-size:11px;color:#444;margin-bottom:6px}
+  /* Transcript - free floating text, centered, no box */
+  .transcript-box{width:100%;background:transparent;border:none;padding:0;font-size:16px;color:#bbb;line-height:1.6;max-height:120px;overflow-y:auto;text-align:center}
+  .transcript-label{display:none}
  
-  .fallback-box{width:100%;display:flex;flex-direction:column;gap:8px}
-  .fallback-box textarea{width:100%;background:#1c1c1e;border:1px solid #3a3a3c;border-radius:12px;padding:12px 14px;font-size:14px;color:#fff;resize:none;height:80px;outline:none;font-family:inherit}
-  .fallback-box textarea:focus{border-color:#4a7aff}.fallback-box textarea::placeholder{color:#555}
+  .fallback-box{width:100%;display:flex;flex-direction:column;gap:10px;align-items:center}
+  .fallback-box textarea{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.1);border-radius:0;padding:10px 4px;font-size:15px;color:#ccc;resize:none;height:60px;outline:none;font-family:inherit;text-align:center}
+  .fallback-box textarea:focus{border-bottom-color:#4a7aff}.fallback-box textarea::placeholder{color:#444}
   .pending-list{width:100%;display:flex;flex-direction:column;gap:8px}.pending-label{font-size:12px;color:#888;margin-bottom:2px}
   .pending-card{background:#1c1c1e;border-radius:12px;padding:10px 14px;border-left:3px solid #4a7aff}
   .pending-title{font-size:14px;font-weight:500}.pending-sub{font-size:12px;color:#888;margin-top:2px}.pending-reminder{font-size:11px;color:#4a7aff;margin-top:2px}
@@ -148,7 +148,7 @@ und erzähl mir von deinem Termin</div>
  
       <div class="status fade-in" id="status">Bereit</div>
       <div class="transcript-box" id="transcript-box" style="display:none"><div class="transcript-label">Erkannter Text:</div><div id="transcript-text"></div></div>
-      <div class="fallback-box" id="fallback-box" style="display:none"><div style="font-size:12px;color:#888;">Mikrofon nicht verfügbar – Text eingeben:</div><textarea id="fallback-textarea" placeholder="z.B. Nächsten Montag Treffen in Barßel"></textarea><button class="btn btn-primary" onclick="submitFB()" style="align-self:flex-end;">Termin erkennen</button></div>
+      <div class="fallback-box" id="fallback-box" style="display:none"><textarea id="fallback-textarea" placeholder="Text eingeben..."></textarea><button class="btn btn-primary" onclick="submitFB()">Termin erkennen</button></div>
       <div class="pending-list" id="pending-list" style="display:none"><div class="pending-label">Erkannte Termine:</div><div id="pending-cards"></div><div class="btn-row"><button class="btn btn-primary" onclick="confirmP()">Speichern</button><button class="btn btn-secondary" onclick="rejectP()">Verwerfen</button></div></div>
     </div>
   </div>
@@ -346,4 +346,3 @@ setTimeout(()=>{if(S.googleClientId)initGA();},1000);
 </script>
 </body>
 </html>
- 
