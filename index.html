@@ -9,20 +9,48 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:#111113;color:#fff;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;max-width:500px;margin:0 auto;overflow-x:hidden}
-  .header{text-align:center;padding:20px 16px 8px}.header span{font-size:11px;color:#555;letter-spacing:2px;text-transform:uppercase}
-  .nav{display:flex;background:#1c1c1e;border-radius:12px;margin:4px 16px 16px;padding:3px}
-  .nav-tab{flex:1;text-align:center;padding:8px 0;font-size:13px;font-weight:400;color:#666;background:transparent;border-radius:10px;cursor:pointer;transition:all .2s;border:none;-webkit-appearance:none}
-  .nav-tab.active{font-weight:500;color:#fff;background:#2c2c2e}.nav-tab.settings-tab{flex:0 0 44px}
+ 
+  /* NAV - bigger, at very top */
+  .nav{display:flex;background:#1c1c1e;border-radius:14px;margin:12px 16px 12px;padding:4px}
+  .nav-tab{flex:1;text-align:center;padding:11px 0;font-size:14px;font-weight:400;color:#666;background:transparent;border-radius:11px;cursor:pointer;transition:all .25s;border:none;-webkit-appearance:none}
+  .nav-tab.active{font-weight:600;color:#fff;background:#2c2c2e}
+  .nav-tab.settings-tab{flex:0 0 50px;font-size:16px}
   .content{flex:1;padding:0 16px 24px;overflow-y:auto;-webkit-overflow-scrolling:touch}
-  .aufnahme{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:420px;gap:20px}
+ 
+  /* Tab transitions */
+  .tab-content{display:none;opacity:0;transition:opacity .3s ease}
+  .tab-content.active{display:block;opacity:1}
+ 
+  .aufnahme{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:460px;gap:24px}
   .aufnahme-text{font-size:15px;color:#888;text-align:center;line-height:1.6;white-space:pre-line}
-  .mic-btn{width:96px;height:96px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#4a7aff,#6c5ce7);box-shadow:0 0 30px rgba(74,122,255,.3);transition:all .3s}
-  .mic-btn.recording{background:linear-gradient(135deg,#e24b4a,#c0392b);box-shadow:0 0 40px rgba(226,75,74,.4);animation:pulse 1.5s ease-in-out infinite}
+ 
+  /* MIC BUTTON - bigger with glow */
+  .mic-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+  .mic-glow{position:absolute;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(74,122,255,.15) 0%,transparent 70%);animation:glowPulse 3s ease-in-out infinite}
+  .mic-btn{width:120px;height:120px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#4a7aff,#6c5ce7);box-shadow:0 4px 30px rgba(74,122,255,.35);transition:all .3s;position:relative;z-index:1}
+  .mic-btn.recording{background:linear-gradient(135deg,#e24b4a,#c0392b);box-shadow:0 4px 40px rgba(226,75,74,.45)}
   .mic-btn.disabled{opacity:.4;pointer-events:none}
-  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-  .status{font-size:13px;color:#555;text-align:center;line-height:1.4;padding:0 10px}.status.processing{color:#4a7aff}.status.error{color:#e24b4a}.status.success{color:#34a853}
-  .transcript-box{width:100%;background:#1c1c1e;border-radius:12px;padding:14px;font-size:14px;color:#ccc;line-height:1.5;max-height:120px;overflow-y:auto}
-  .transcript-label{font-size:11px;color:#555;margin-bottom:6px}
+  .mic-btn.recording .mic-glow{display:none}
+  @keyframes glowPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:1}}
+ 
+  /* Wave animation during recording */
+  .wave-wrap{position:absolute;width:160px;height:160px;pointer-events:none;z-index:0}
+  .wave-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(226,75,74,.3);animation:waveExpand 2s ease-out infinite;opacity:0}
+  .wave-ring:nth-child(2){animation-delay:.5s}
+  .wave-ring:nth-child(3){animation-delay:1s}
+  @keyframes waveExpand{0%{transform:scale(.75);opacity:.6}100%{transform:scale(1.5);opacity:0}}
+  .wave-wrap.hidden{display:none}
+ 
+  /* Status with fade animation */
+  .status{font-size:13px;color:#555;text-align:center;line-height:1.4;padding:0 10px;transition:all .4s ease;min-height:20px}
+  .status.processing{color:#4a7aff}.status.error{color:#e24b4a}.status.success{color:#34a853}
+  .status.fade-in{animation:fadeUp .4s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+ 
+  /* Transcript - transparent, blends with background */
+  .transcript-box{width:100%;background:transparent;border-radius:0;padding:8px 4px;font-size:14px;color:#aaa;line-height:1.5;max-height:120px;overflow-y:auto;border-bottom:1px solid rgba(255,255,255,.06)}
+  .transcript-label{font-size:11px;color:#444;margin-bottom:6px}
+ 
   .fallback-box{width:100%;display:flex;flex-direction:column;gap:8px}
   .fallback-box textarea{width:100%;background:#1c1c1e;border:1px solid #3a3a3c;border-radius:12px;padding:12px 14px;font-size:14px;color:#fff;resize:none;height:80px;outline:none;font-family:inherit}
   .fallback-box textarea:focus{border-color:#4a7aff}.fallback-box textarea::placeholder{color:#555}
@@ -69,7 +97,6 @@
   .slider-value{min-width:55px;text-align:right;font-size:14px;font-weight:500}
   .divider{height:1px;background:#2c2c2e;margin:8px 0}
   .settings-info{font-size:12px;color:#555;line-height:1.5}
-  .tab-content{display:none}.tab-content.active{display:block}
   .mic-permission-banner{width:100%;background:#1c1c1e;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;align-items:center}
   .mic-permission-banner p{font-size:13px;color:#888;text-align:center;line-height:1.5}
   .setup-banner{width:100%;background:#2a1a0a;border:1px solid #4a3520;border-radius:12px;padding:14px;text-align:center}
@@ -89,12 +116,14 @@
 </style>
 </head>
 <body>
-<div class="header"><span>Termin-App</span></div>
+ 
+<!-- No header title - nav is at top -->
 <div class="nav">
   <button class="nav-tab active" data-tab="aufnahme">Aufnahme</button>
   <button class="nav-tab" data-tab="termine">Termine</button>
   <button class="nav-tab settings-tab" data-tab="settings">⚙</button>
 </div>
+ 
 <div class="content">
   <div id="tab-aufnahme" class="tab-content active">
     <div class="aufnahme">
@@ -102,11 +131,22 @@
       <div class="mic-permission-banner" id="mic-permission-banner" style="display:none"><p>Die App braucht Zugriff auf dein Mikrofon.</p><button class="btn btn-primary" onclick="reqMic()">Mikrofon erlauben</button></div>
       <div class="aufnahme-text" id="aufnahme-text">Tippe auf das Mikrofon
 und erzähl mir von deinem Termin</div>
-      <button class="mic-btn" id="mic-btn" onclick="micClick()">
-        <svg id="mic-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="1" width="6" height="11" rx="3"/><path d="M19 10v1a7 7 0 01-14 0v-1"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-        <svg id="stop-icon" width="32" height="32" viewBox="0 0 24 24" fill="#fff" style="display:none"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
-      </button>
-      <div class="status" id="status">Bereit</div>
+ 
+      <!-- Mic button with glow + waves -->
+      <div class="mic-wrap">
+        <div class="mic-glow" id="mic-glow"></div>
+        <div class="wave-wrap hidden" id="wave-wrap">
+          <div class="wave-ring"></div>
+          <div class="wave-ring"></div>
+          <div class="wave-ring"></div>
+        </div>
+        <button class="mic-btn" id="mic-btn" onclick="micClick()">
+          <svg id="mic-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="1" width="6" height="11" rx="3"/><path d="M19 10v1a7 7 0 01-14 0v-1"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          <svg id="stop-icon" width="38" height="38" viewBox="0 0 24 24" fill="#fff" style="display:none"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+        </button>
+      </div>
+ 
+      <div class="status fade-in" id="status">Bereit</div>
       <div class="transcript-box" id="transcript-box" style="display:none"><div class="transcript-label">Erkannter Text:</div><div id="transcript-text"></div></div>
       <div class="fallback-box" id="fallback-box" style="display:none"><div style="font-size:12px;color:#888;">Mikrofon nicht verfügbar – Text eingeben:</div><textarea id="fallback-textarea" placeholder="z.B. Nächsten Montag Treffen in Barßel"></textarea><button class="btn btn-primary" onclick="submitFB()" style="align-self:flex-end;">Termin erkennen</button></div>
       <div class="pending-list" id="pending-list" style="display:none"><div class="pending-label">Erkannte Termine:</div><div id="pending-cards"></div><div class="btn-row"><button class="btn btn-primary" onclick="confirmP()">Speichern</button><button class="btn btn-secondary" onclick="rejectP()">Verwerfen</button></div></div>
@@ -163,7 +203,7 @@ let gTk=localStorage.getItem('googleAccessToken')||'',gEx=parseInt(localStorage.
  
 document.addEventListener('DOMContentLoaded',()=>{loadAll();initUI();chkMic();chkSetup();updG();updKIc();});
 document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>swTab(t.dataset.tab)));
-function swTab(n){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));const nt=document.querySelector(`.nav-tab[data-tab="${n}"]`);if(nt)nt.classList.add('active');document.getElementById('tab-'+n).classList.add('active');if(n==='termine')renT();if(n==='aufnahme')chkSetup();if(n==='kerninfos')renKI();}
+function swTab(n){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>{t.classList.remove('active');t.style.opacity='0';});const nt=document.querySelector(`.nav-tab[data-tab="${n}"]`);if(nt)nt.classList.add('active');const tab=document.getElementById('tab-'+n);tab.classList.add('active');requestAnimationFrame(()=>{tab.style.opacity='1';});if(n==='termine')renT();if(n==='aufnahme')chkSetup();if(n==='kerninfos')renKI();}
 function chkSetup(){document.getElementById('setup-banner').style.display=(!S.apiKey||!S.workerUrl)?'block':'none';}
 function unlkTTS(){if(ttsU)return;const u=new SpeechSynthesisUtterance('');u.volume=0;speechSynthesis.speak(u);ttsU=true;}
 function speak(t){if(!('speechSynthesis'in window)||!S.readBack)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=1;u.volume=1;speechSynthesis.speak(u);}
@@ -175,16 +215,7 @@ async function hGT(r){if(r.error){alert('Fehler: '+(r.error_description||r.error
 function gOut(){if(gTk&&typeof google!=='undefined')try{google.accounts.oauth2.revoke(gTk);}catch(e){}gTk='';gEx=0;gNm='';gEm='';['googleAccessToken','googleTokenExpiry','googleUserName','googleUserEmail'].forEach(k=>localStorage.removeItem(k));updG();}
 function updG(){const ok=gTk&&Date.now()<gEx;document.getElementById('g-out').style.display=ok?'none':'block';document.getElementById('g-in').style.display=ok?'block':'none';if(ok){document.getElementById('g-nm').textContent=gNm;document.getElementById('g-em').textContent=gEm;document.getElementById('g-av').textContent=(gNm||'?')[0].toUpperCase();}}
 async function ensGT(){if(!gTk||Date.now()>=gEx)return new Promise((res,rej)=>{if(!tCl)initGA();if(!tCl){rej(new Error('Google n/a'));return;}tCl.callback=r=>{hGT(r);r.error?rej(new Error(r.error)):res();};tCl.requestAccessToken();});}
- 
-async function gCr(t){await ensGT();const s=new Date(t.datum+'T'+t.uhrzeit+':00'),dur=t.dauer||60,e=new Date(s.getTime()+dur*60000),tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const body={summary:t.titel,location:t.ort||undefined,description:t.notiz||undefined,start:{dateTime:s.toISOString(),timeZone:tz},end:{dateTime:e.toISOString(),timeZone:tz},reminders:{useDefault:false,overrides:[{method:'popup',minutes:t.erinnerung||S.defaultReminder}]}};
-  if(t.wiederholung)body.recurrence=[t.wiederholung];
-  const r=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events',{method:'POST',headers:{'Authorization':'Bearer '+gTk,'Content-Type':'application/json'},body:JSON.stringify(body)});
-  if(!r.ok)throw new Error(r.status);const ev=await r.json();
-  // Vorabend-Erinnerung: extra Event am Abend vorher
-  if(t.vorabend){const va=new Date(s);va.setDate(va.getDate()-1);va.setHours(20,0,0,0);
-    await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events',{method:'POST',headers:{'Authorization':'Bearer '+gTk,'Content-Type':'application/json'},body:JSON.stringify({summary:'Morgen: '+t.titel,start:{dateTime:va.toISOString(),timeZone:tz},end:{dateTime:new Date(va.getTime()+900000).toISOString(),timeZone:tz},reminders:{useDefault:false,overrides:[{method:'popup',minutes:0}]}})});}
-  return ev.id;}
+async function gCr(t){await ensGT();const s=new Date(t.datum+'T'+t.uhrzeit+':00'),dur=t.dauer||60,e=new Date(s.getTime()+dur*60000),tz=Intl.DateTimeFormat().resolvedOptions().timeZone;const body={summary:t.titel,location:t.ort||undefined,description:t.notiz||undefined,start:{dateTime:s.toISOString(),timeZone:tz},end:{dateTime:e.toISOString(),timeZone:tz},reminders:{useDefault:false,overrides:[{method:'popup',minutes:t.erinnerung||S.defaultReminder}]}};if(t.wiederholung)body.recurrence=[t.wiederholung];const r=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events',{method:'POST',headers:{'Authorization':'Bearer '+gTk,'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error(r.status);const ev=await r.json();if(t.vorabend){const va=new Date(s);va.setDate(va.getDate()-1);va.setHours(20,0,0,0);await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events',{method:'POST',headers:{'Authorization':'Bearer '+gTk,'Content-Type':'application/json'},body:JSON.stringify({summary:'Morgen: '+t.titel,start:{dateTime:va.toISOString(),timeZone:tz},end:{dateTime:new Date(va.getTime()+900000).toISOString(),timeZone:tz},reminders:{useDefault:false,overrides:[{method:'popup',minutes:0}]}})});}return ev.id;}
 async function gUp(t){if(!t.gid)return;await ensGT();const s=new Date(t.datum+'T'+t.uhrzeit+':00'),dur=t.dauer||60,e=new Date(s.getTime()+dur*60000),tz=Intl.DateTimeFormat().resolvedOptions().timeZone;await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events/'+t.gid,{method:'PUT',headers:{'Authorization':'Bearer '+gTk,'Content-Type':'application/json'},body:JSON.stringify({summary:t.titel,location:t.ort||undefined,description:t.notiz||undefined,start:{dateTime:s.toISOString(),timeZone:tz},end:{dateTime:e.toISOString(),timeZone:tz},reminders:{useDefault:false,overrides:[{method:'popup',minutes:t.erinnerung||S.defaultReminder}]}})});}
 async function gDel(t){if(!t.gid)return;await ensGT();await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events/'+t.gid,{method:'DELETE',headers:{'Authorization':'Bearer '+gTk}});}
  
@@ -212,14 +243,17 @@ function cancelKI(){document.getElementById('ki-new').style.display='none';kiEd=
 function saveNewKI(){const v=document.getElementById('ki-input').value.trim();if(!v)return;if(kiEd>=0){S.kerninfos[kiEd]=v;kiEd=-1;}else S.kerninfos.push(v);saveS();document.getElementById('ki-new').style.display='none';renKI();updKIc();}
 function editKI(i){kiEd=i;document.getElementById('ki-input').value=S.kerninfos[i];document.getElementById('ki-new').style.display='block';document.getElementById('ki-input').focus();}
 function delKI(i){S.kerninfos.splice(i,1);saveS();renKI();updKIc();}
-function renKI(){const el=document.getElementById('ki-list');if(!S.kerninfos.length){el.innerHTML='<div class="ki-empty">Noch keine Kerninfos.<br>Tippe + um hinzuzufügen.<br><br>Beispiele:<br>• Wohne in Cloppenburg<br>• Aufstehen 6:30, Losfahren 7:15<br>• Arbeit beginnt 8:00<br>• Frieda wohnt in Barßel, 40 Min<br>• Fitnessstudio 15 Min Fahrt</div>';return;}
-el.innerHTML=S.kerninfos.map((k,i)=>`<div class="ki-card"><div class="ki-card-text">${esc(k)}</div><div class="ki-card-actions"><button class="icon-btn" onclick="editKI(${i})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a7aff" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn" onclick="delKI(${i})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e24b4a" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`).join('');}
+function renKI(){const el=document.getElementById('ki-list');if(!S.kerninfos.length){el.innerHTML='<div class="ki-empty">Noch keine Kerninfos.<br>Tippe + um hinzuzufügen.<br><br>Beispiele:<br>• Wohne in Cloppenburg<br>• Aufstehen 6:30, Losfahren 7:15<br>• Frieda wohnt in Barßel, 40 Min</div>';return;}el.innerHTML=S.kerninfos.map((k,i)=>`<div class="ki-card"><div class="ki-card-text">${esc(k)}</div><div class="ki-card-actions"><button class="icon-btn" onclick="editKI(${i})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a7aff" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn" onclick="delKI(${i})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e24b4a" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`).join('');}
  
 async function startR(){if(!spOK){showFB('Nicht unterstützt.');return;}if(micOK===false){showFB('Blockiert.');return;}if(micOK===null){try{const s=await navigator.mediaDevices.getUserMedia({audio:true});s.getTracks().forEach(t=>t.stop());micOK=true;hideB();}catch(e){micOK=false;showFB('Verweigert.');return;}}const SR=window.SpeechRecognition||window.webkitSpeechRecognition;rec=new SR();rec.lang='de-DE';rec.continuous=true;rec.interimResults=true;fts='';ts='';rec.onresult=e=>{let i='';for(let x=e.resultIndex;x<e.results.length;x++){if(e.results[x].isFinal)fts+=e.results[x][0].transcript+' ';else i=e.results[x][0].transcript;}ts=fts+i;showTs(ts);};rec.onerror=e=>{if(e.error==='not-allowed'||e.error==='service-not-allowed'){micOK=false;isRec=false;updMB();showFB('Blockiert.');}else if(e.error==='network'){setSt('Netzwerkfehler.',false,true);isRec=false;updMB();}else if(e.error!=='no-speech')setSt('Fehler: '+e.error,false,true);};rec.onend=()=>{if(isRec)try{rec.start();}catch(e){}};try{rec.start();isRec=true;updMB();setSt('Ich höre zu...',false);document.getElementById('aufnahme-text').textContent='Ich höre zu...';document.getElementById('pending-list').style.display='none';document.getElementById('fallback-box').style.display='none';}catch(e){showFB('Fehler.');}}
 async function stopR(){isRec=false;if(rec){rec.onend=null;try{rec.stop();}catch(e){}rec=null;}updMB();document.getElementById('aufnahme-text').textContent='Tippe auf das Mikrofon\nund erzähl mir von deinem Termin';if(ts.trim()){setSt('Verarbeite...',true);await doAI(ts.trim());}else setSt('Kein Text erkannt.',false);}
 async function submitFB(){unlkTTS();if(!S.apiKey||!S.workerUrl){swTab('settings');return;}const t=document.getElementById('fallback-textarea').value.trim();if(!t){setSt('Bitte Text eingeben.',false,true);return;}setSt('Verarbeite...',true);await doAI(t);document.getElementById('fallback-textarea').value='';}
-function updMB(){const b=document.getElementById('mic-btn');if(isRec){b.classList.add('recording');b.classList.remove('disabled');document.getElementById('mic-icon').style.display='none';document.getElementById('stop-icon').style.display='block';}else{b.classList.remove('recording');document.getElementById('mic-icon').style.display='block';document.getElementById('stop-icon').style.display='none';}}
-function setSt(t,p,e){const el=document.getElementById('status');el.textContent=(p?'⏳ ':'')+t;el.className='status'+(p?' processing':'')+(e?' error':'');}
+ 
+function updMB(){const b=document.getElementById('mic-btn'),gl=document.getElementById('mic-glow'),wv=document.getElementById('wave-wrap');
+  if(isRec){b.classList.add('recording');b.classList.remove('disabled');document.getElementById('mic-icon').style.display='none';document.getElementById('stop-icon').style.display='block';gl.style.display='none';wv.classList.remove('hidden');}
+  else{b.classList.remove('recording');document.getElementById('mic-icon').style.display='block';document.getElementById('stop-icon').style.display='none';gl.style.display='';wv.classList.add('hidden');}}
+ 
+function setSt(t,p,e){const el=document.getElementById('status');el.textContent=(p?'⏳ ':'')+t;el.className='status fade-in'+(p?' processing':'')+(e?' error':'');}
 function showTs(t){const b=document.getElementById('transcript-box');if(t){b.style.display='block';document.getElementById('transcript-text').textContent=t;}else b.style.display='none';}
  
 async function doAI(text){
@@ -233,81 +267,52 @@ async function doAI(text){
  
 AKTUELLE ZEIT: ${timeStr} Uhr
 HEUTE: ${dn[now.getDay()]}, ${ds}
-Wochentag-Nummer heute: ${now.getDay()} (0=So,1=Mo,2=Di,3=Mi,4=Do,5=Fr,6=Sa)
+Wochentag-Nummer: ${now.getDay()} (0=So,1=Mo,2=Di,3=Mi,4=Do,5=Fr,6=Sa)
  
-KERNINFOS DES NUTZERS (IMMER berücksichtigen!):
+KERNINFOS (IMMER berücksichtigen!):
 ${ki}
  
-Antworte NUR mit JSON-Array (keine Backticks, kein Markdown):
-[{"titel":"...","datum":"YYYY-MM-DD","uhrzeit":"HH:MM","ort":"...","notiz":"...","erinnerung":MINUTEN,"dauer":MINUTEN,"vorlesen":"...","vorabend":true/false,"wiederholung":"RRULE:..."|null}]
+Antworte NUR mit JSON-Array (keine Backticks):
+[{"titel":"...","datum":"YYYY-MM-DD","uhrzeit":"HH:MM","ort":"...","notiz":"...","erinnerung":MIN,"dauer":MIN,"vorlesen":"...","vorabend":bool,"wiederholung":"RRULE:..."|null}]
  
-=== WOCHENTAGE – STRENGE REGELN ===
-BERECHNE DAS DATUM EXAKT. Heute ist ${dn[now.getDay()]} (${ds}).
-- "nächsten Montag" = der NÄCHSTE Montag der NACH heute kommt. Wenn heute Mittwoch ist, ist nächster Montag in 5 Tagen. NIEMALS morgen oder übermorgen, es sei denn morgen IST ein Montag.
-- "diesen Freitag" / "am Freitag" = der kommende Freitag. Wenn heute Mittwoch, dann in 2 Tagen.
-- "am Wochenende" = kommender Samstag.
-- "morgen" = +1 Tag. "übermorgen" = +2 Tage.
-- RECHNE NACH: Zähle die Tage vom heutigen Wochentag bis zum genannten Wochentag. Wenn der genannte Tag heute oder schon vorbei ist diese Woche, gehe zur nächsten Woche.
-- BERECHNUNG: Heutiger Wochentag = ${now.getDay()}. Ziel-Tag = X. Differenz = (X - ${now.getDay()} + 7) % 7. Wenn Differenz = 0, dann 7 (nächste Woche). Datum = heute + Differenz Tage.
+=== WOCHENTAGE ===
+Heute=${dn[now.getDay()]} (${now.getDay()}). RECHNE EXAKT:
+- "nächsten Montag": Ziel=1. Diff=(1-${now.getDay()}+7)%7. Wenn 0→7. Datum=heute+Diff.
+- "diesen Freitag": Ziel=5. Diff=(5-${now.getDay()}+7)%7. Wenn 0→7.
+- "morgen"=+1, "übermorgen"=+2, "am Wochenende"=nächster Samstag.
  
 === TAGESZEITEN ===
-- "morgens" / "früh" → 08:00
-- "vormittags" → 10:00
-- "mittags" → 12:00
-- "nachmittags" → 15:00
-- "abends" / "heute Abend" → 19:00
-- "nachts" / "heute Nacht" → 22:00
-- "vor der Arbeit" → Suche Aufstehzeit in Kerninfos, setze uhrzeit = Aufstehzeit + 15min, erinnerung = 0
-- "nach Feierabend" / "nach der Arbeit" → Suche Feierabend in Kerninfos, nutze diese Zeit
+"morgens/früh"→08:00, "vormittags"→10:00, "mittags"→12:00, "nachmittags"→15:00, "abends"→19:00, "nachts"→22:00
+"vor der Arbeit"→Kerninfos: Aufstehzeit+15min, erinnerung=0
+"nach Feierabend"→Feierabend-Zeit aus Kerninfos
  
 === RELATIVE ZEITEN ===
-- "in einer Stunde" → aktuelle Uhrzeit (${timeStr}) + 60min. BERECHNE die konkrete Uhrzeit!
-- "in 30 Minuten" → ${timeStr} + 30min
-- "gleich" → ${timeStr} + 15min
+"in einer Stunde"→${timeStr}+60min KONKRET berechnen!
+"in 30 Min"→${timeStr}+30min. "gleich"→+15min.
  
-=== FAHRTZEITEN & ERINNERUNG ===
-1. ZUERST Kerninfos prüfen: Ist die Person/Ort dort mit Fahrtzeit? → Diese nutzen!
-2. Wenn NICHT in Kerninfos: Schätze Fahrtzeit mit Auto in Deutschland. GROSSZÜGIG schätzen (lieber 10 Min zu viel als zu wenig).
-3. Wenn Wohnort in Kerninfos steht, nutze ihn als Startpunkt.
-4. erinnerung = Fahrtzeit + 5 Min Puffer
-5. Explizite Angabe im Text überschreibt alles.
-6. Kein Ort, keine Fahrt → erinnerung = ${S.defaultReminder}
+=== FAHRTZEITEN ===
+1. Kerninfos prüfen (Person/Ort mit Fahrtzeit)→nutzen!
+2. Sonst: Geografie schätzen, GROSSZÜGIG (+10 Min lieber zu viel). Wohnort aus Kerninfos als Start.
+3. erinnerung=Fahrtzeit+5min Puffer
+4. Explizite Angabe überschreibt.
+5. Kein Ort/Fahrt→${S.defaultReminder}
  
-=== TITEL (für Handy-Benachrichtigung) ===
-- Kurz und nützlich. Person + Aktion oder Kern-Info.
-- Bei Terminen mit Fahrtzeit: "ORT – Losfahren HH:MM" z.B. "Barßel – Losfahren 18:20"
-- Bei Mitbring-Aufgaben: "Person – Ding mitnehmen" z.B. "Frieda – Stift mitnehmen"
-- Berechne die Losfahrzeit: Termin-Uhrzeit minus Fahrtzeit.
+=== TITEL (Handy-Benachrichtigung) ===
+Kurz+nützlich. Bei Fahrt: "ORT – Los HH:MM" (Losfahrzeit=Termin minus Fahrtzeit).
+Bei Mitbringen: "Person – Ding mitnehmen". Sonst: Kernpunkt.
  
-=== DAUER (in Minuten) ===
-Schätze wie lange der Termin dauert:
-- Arzttermin: 30-45
-- Kurzes Treffen/Kaffee: 60
-- Meeting: 60
-- Essen/Abendessen: 90-120
-- Sport/Fitness: 60-90
-- Einkaufen: 45-60
-- Behörde/Amt: 30-60
-- Wenn unklar: 60
+=== DAUER (Min) ===
+Arzt:30-45, Treffen:60, Meeting:60, Essen:90-120, Sport:60-90, Einkauf:45, Unklar:60
  
-=== VORABEND-ERINNERUNG ===
-"vorabend": true wenn der Termin mehr als 1 Tag in der Zukunft liegt (also nicht heute und nicht morgen).
-Bei vorabend=true wird automatisch am Abend vorher um 20:00 eine Extra-Erinnerung erstellt: "Morgen: [Titel]"
+=== VORABEND ===
+vorabend=true wenn Termin>1 Tag entfernt (nicht heute, nicht morgen).
  
 === WIEDERHOLUNG ===
-Wenn der Nutzer sagt "jeden Montag", "jede Woche", "täglich", etc.:
-- "jeden Montag" → "RRULE:FREQ=WEEKLY;BYDAY=MO"
-- "jede Woche" → "RRULE:FREQ=WEEKLY"
-- "jeden Tag" / "täglich" → "RRULE:FREQ=DAILY"
-- "jeden Monat" → "RRULE:FREQ=MONTHLY"
-- Kein Wiederholung → null
+"jeden Montag"→"RRULE:FREQ=WEEKLY;BYDAY=MO", "jede Woche"→WEEKLY, "täglich"→DAILY, sonst null.
  
 === VORLESEN ===
-Natürlicher kurzer Satz. NUR die Kerninfo. Uhrzeiten natürlich ("halb sieben", "um drei").
-Bei Fahrtterminen: Losfahrzeit erwähnen. Z.B. "Treffen in Barßel um sieben. Losfahren um zwanzig nach sechs."
-KEIN "Termin gespeichert", "Alles klar" o.ä.
- 
-Kein Ort="". Keine Uhrzeit="09:00".`,
+Kurz, natürlich. Bei Fahrt: Losfahrzeit nennen. KEIN "Gespeichert"/"Verstanden".
+Uhrzeiten natürlich: "halb sieben","um drei","viertel nach".`,
         messages:[{role:'user',content:text}]})});
     const data=await r.json();
     if(data.error){setSt('API-Fehler: '+(data.error.message||''),false,true);return;}
@@ -321,7 +326,7 @@ Kein Ort="". Keine Uhrzeit="09:00".`,
   }catch(e){console.error(e);setSt('Verbindungsfehler.',false,true);}
 }
  
-async function saveNew(items){if(S.calendar==='google'&&gTk){setSt('Speichere...',true);for(const t of items){try{t.gid=await gCr(t);}catch(e){console.error(e);}}}termine.push(...items);saveTm();const ok=items.filter(t=>t.gid).length;if(S.calendar==='google'&&ok>0){setSt(ok+' im Kalender!',false);document.getElementById('status').className='status success';}else setSt(items.length+' gespeichert!',false);}
+async function saveNew(items){if(S.calendar==='google'&&gTk){setSt('Speichere...',true);for(const t of items){try{t.gid=await gCr(t);}catch(e){console.error(e);}}}termine.push(...items);saveTm();const ok=items.filter(t=>t.gid).length;if(S.calendar==='google'&&ok>0){setSt(ok+' im Kalender!',false);document.getElementById('status').className='status success fade-in';}else setSt(items.length+' gespeichert!',false);}
 function showP(){document.getElementById('pending-cards').innerHTML=pend.map(t=>`<div class="pending-card"><div class="pending-title">${esc(t.titel)}</div><div class="pending-sub">${fD(t.datum)} · ${t.uhrzeit} · ${t.dauer||60} Min${t.ort?' · '+esc(t.ort):''}</div><div class="pending-reminder">Erinnerung: ${fR(t.erinnerung)} vorher${t.vorabend?' + Vorabend':''}${t.wiederholung?' · Wiederholt':''}</div></div>`).join('');document.getElementById('pending-list').style.display='flex';}
 async function confirmP(){document.getElementById('pending-list').style.display='none';await saveNew(pend);pend=[];}
 function rejectP(){pend=[];document.getElementById('pending-list').style.display='none';setSt('Verworfen.',false);}
@@ -330,7 +335,7 @@ function renT(){const l=document.getElementById('termine-list');if(!termine.leng
 function edT(id){const t=termine.find(x=>x.id===id);if(!t)return;document.getElementById('t-'+id).innerHTML=`<div class="edit-card" style="width:100%"><input type="text" id="et${id}" value="${esc(t.titel)}" placeholder="Titel"><div class="edit-row"><input type="date" id="ed${id}" value="${t.datum}" style="flex:1"><input type="time" id="eu${id}" value="${t.uhrzeit}" style="flex:1"></div><input type="text" id="eo${id}" value="${esc(t.ort)}" placeholder="Ort"><input type="text" id="en${id}" value="${esc(t.notiz)}" placeholder="Notiz"><div class="edit-row"><label style="font-size:12px;color:#888;flex:1;">Erinnerung (Min):<input type="number" id="er${id}" value="${t.erinnerung||15}" min="0" max="1440" style="width:70px;"></label><label style="font-size:12px;color:#888;flex:1;">Dauer (Min):<input type="number" id="edr${id}" value="${t.dauer||60}" min="5" max="480" style="width:70px;"></label></div><div class="btn-row"><button class="btn btn-primary" onclick="svE(${id})">Speichern</button><button class="btn btn-secondary" onclick="renT()">Abbrechen</button></div></div>`;}
 async function svE(id){const t=termine.find(x=>x.id===id);if(!t)return;t.titel=document.getElementById('et'+id).value||t.titel;t.datum=document.getElementById('ed'+id).value||t.datum;t.uhrzeit=document.getElementById('eu'+id).value||t.uhrzeit;t.ort=document.getElementById('eo'+id).value;t.notiz=document.getElementById('en'+id).value;t.erinnerung=parseInt(document.getElementById('er'+id).value)||15;t.dauer=parseInt(document.getElementById('edr'+id).value)||60;if(t.gid&&S.calendar==='google')try{await gUp(t);}catch(e){}saveTm();renT();}
 async function dlT(id){const t=termine.find(x=>x.id===id);if(!t)return;if(t.gid&&S.calendar==='google')try{await gDel(t);}catch(e){}termine=termine.filter(x=>x.id!==id);saveTm();renT();}
-function mkICS(items){return'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//TerminApp//DE\r\n'+items.map(t=>{const s=new Date(t.datum+'T'+t.uhrzeit+':00'),e=new Date(s.getTime()+(t.dauer||60)*60000),f=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');return['BEGIN:VEVENT','DTSTART:'+f(s),'DTEND:'+f(e),'SUMMARY:'+t.titel,t.ort?'LOCATION:'+t.ort:'',t.notiz?'DESCRIPTION:'+t.notiz:'',t.wiederholung?t.wiederholung:'','BEGIN:VALARM','TRIGGER:-PT'+(t.erinnerung||15)+'M','ACTION:DISPLAY','DESCRIPTION:'+t.titel,'END:VALARM','END:VEVENT'].filter(Boolean).join('\r\n');}).join('\r\n')+'\r\nEND:VCALENDAR';}
+function mkICS(items){return'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//TerminApp//DE\r\n'+items.map(t=>{const s=new Date(t.datum+'T'+t.uhrzeit+':00'),e=new Date(s.getTime()+(t.dauer||60)*60000),f=d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');return['BEGIN:VEVENT','DTSTART:'+f(s),'DTEND:'+f(e),'SUMMARY:'+t.titel,t.ort?'LOCATION:'+t.ort:'',t.notiz?'DESCRIPTION:'+t.notiz:'',t.wiederholung||'','BEGIN:VALARM','TRIGGER:-PT'+(t.erinnerung||15)+'M','ACTION:DISPLAY','DESCRIPTION:'+t.titel,'END:VALARM','END:VEVENT'].filter(Boolean).join('\r\n');}).join('\r\n')+'\r\nEND:VCALENDAR';}
 function dlICS(i,fn){const b=new Blob([i],{type:'text/calendar'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);}
 function expI(id){const t=termine.find(x=>x.id===id);if(t)dlICS(mkICS([t]),t.titel.replace(/\s+/g,'_')+'.ics');}
 function saveTm(){localStorage.setItem('termine',JSON.stringify(termine));}
@@ -341,3 +346,4 @@ setTimeout(()=>{if(S.googleClientId)initGA();},1000);
 </script>
 </body>
 </html>
+ 
