@@ -389,12 +389,25 @@ NIEMALS ein Datum verwenden das nicht in der Tabelle steht (außer bei Terminen 
 "in einer Stunde"→${timeStr}+60min KONKRET berechnen!
 "in 30 Min"→${timeStr}+30min. "gleich"→+15min.
  
-=== FAHRTZEITEN ===
-1. Kerninfos prüfen→nutzen! 2. Sonst grob schätzen (GROSSZÜGIG +10min). 3. erinnerung=Fahrt+5min
-4. Explizit überschreibt. 5. Kein Ort→${S.defaultReminder}
+=== FAHRTZEITEN & ERINNERUNG – SEHR WICHTIG ===
+"uhrzeit" ist IMMER die Uhrzeit wann der Termin STATTFINDET, NIEMALS die Losfahrzeit!
+Beispiel: "Treffen um 16:00, 30 Min Fahrt" → uhrzeit="16:00", erinnerung=35 (30+5 Puffer)
+Die Erinnerung kommt dann um 15:25 → der Nutzer fährt los → ist um 15:55 da → Termin ist um 16:00. PERFEKT.
+ 
+FALSCH wäre: uhrzeit="15:30" ← das ist die Losfahrzeit, NICHT der Termin!
+ 
+Regeln:
+1. Kerninfos prüfen ob Fahrtzeit hinterlegt ist → nutzen!
+2. Sonst Fahrtzeit grob schätzen (GROSSZÜGIG, +10min lieber zu viel)
+3. erinnerung = Fahrtzeit + 5 Min Puffer
+4. Explizite Angabe im Text überschreibt alles
+5. Kein Ort, keine Fahrt → erinnerung = ${S.defaultReminder}
  
 === TITEL ===
-Kurz. Bei Fahrt: "ORT – Los HH:MM". Bei Mitbringen: "Person – Ding". Sonst Kernpunkt.
+Kurz, für Handy-Benachrichtigung.
+Bei Fahrt: "ORT – Los HH:MM" wobei Losfahrzeit = uhrzeit minus Fahrtzeit. Beispiel: Termin 16:00, 30 Min Fahrt → "Barßel – Los 15:30"
+Bei Mitbringen: "Person – Ding mitnehmen"
+Sonst: Kernpunkt des Termins.
  
 === DAUER ===
 Arzt:30-45, Treffen:60, Meeting:60, Essen:90-120, Sport:60-90, Einkauf:45, Unklar:60
