@@ -9,51 +9,33 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:#111113;color:#fff;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;max-width:500px;margin:0 auto;overflow-x:hidden}
- 
-  /* NAV - bigger, at very top */
   .nav{display:flex;background:#1c1c1e;border-radius:14px;margin:12px 16px 12px;padding:4px}
   .nav-tab{flex:1;text-align:center;padding:11px 0;font-size:14px;font-weight:400;color:#666;background:transparent;border-radius:11px;cursor:pointer;transition:all .25s;border:none;-webkit-appearance:none}
-  .nav-tab.active{font-weight:600;color:#fff;background:#2c2c2e}
-  .nav-tab.settings-tab{flex:0 0 50px;font-size:16px}
+  .nav-tab.active{font-weight:600;color:#fff;background:#2c2c2e}.nav-tab.settings-tab{flex:0 0 50px;font-size:16px}
   .content{flex:1;padding:0 16px 24px;overflow-y:auto;-webkit-overflow-scrolling:touch}
- 
-  /* Tab transitions */
-  .tab-content{display:none;opacity:0;transition:opacity .3s ease}
-  .tab-content.active{display:block;opacity:1}
- 
+  .tab-content{display:none;opacity:0;transition:opacity .3s ease}.tab-content.active{display:block;opacity:1}
   .aufnahme{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:460px;gap:24px}
   .aufnahme-text{font-size:15px;color:#888;text-align:center;line-height:1.6;white-space:pre-line}
- 
-  /* MIC BUTTON - bigger with glow */
   .mic-wrap{position:relative;display:flex;align-items:center;justify-content:center}
   .mic-glow{position:absolute;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(74,122,255,.15) 0%,transparent 70%);animation:glowPulse 3s ease-in-out infinite}
   .mic-btn{width:120px;height:120px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#4a7aff,#6c5ce7);box-shadow:0 4px 30px rgba(74,122,255,.35);transition:all .3s;position:relative;z-index:1}
   .mic-btn.recording{background:linear-gradient(135deg,#e24b4a,#c0392b);box-shadow:0 4px 40px rgba(226,75,74,.45)}
   .mic-btn.disabled{opacity:.4;pointer-events:none}
-  .mic-btn.recording .mic-glow{display:none}
   @keyframes glowPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:1}}
- 
-  /* Wave animation during recording */
   .wave-wrap{position:absolute;width:160px;height:160px;pointer-events:none;z-index:0}
   .wave-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(226,75,74,.3);animation:waveExpand 2s ease-out infinite;opacity:0}
-  .wave-ring:nth-child(2){animation-delay:.5s}
-  .wave-ring:nth-child(3){animation-delay:1s}
+  .wave-ring:nth-child(2){animation-delay:.5s}.wave-ring:nth-child(3){animation-delay:1s}
   @keyframes waveExpand{0%{transform:scale(.75);opacity:.6}100%{transform:scale(1.5);opacity:0}}
   .wave-wrap.hidden{display:none}
- 
-  /* Status with fade animation */
   .status{font-size:13px;color:#555;text-align:center;line-height:1.4;padding:0 10px;transition:all .4s ease;min-height:20px}
   .status.processing{color:#4a7aff}.status.error{color:#e24b4a}.status.success{color:#34a853}
   .status.fade-in{animation:fadeUp .4s ease}
   @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
- 
-  /* Transcript - free floating text, centered, no box */
-  .transcript-box{width:100%;background:transparent;border:none;padding:0;font-size:16px;color:#bbb;line-height:1.6;max-height:120px;overflow-y:auto;text-align:center}
+  .transcript-box{width:75%;max-width:280px;background:transparent;border:none;padding:0;font-size:16px;color:#bbb;line-height:1.6;max-height:140px;overflow-y:auto;text-align:center;margin:0 auto}
   .transcript-label{display:none}
- 
-  .fallback-box{width:100%;display:flex;flex-direction:column;gap:10px;align-items:center}
-  .fallback-box textarea{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.1);border-radius:0;padding:10px 4px;font-size:15px;color:#ccc;resize:none;height:60px;outline:none;font-family:inherit;text-align:center}
-  .fallback-box textarea:focus{border-bottom-color:#4a7aff}.fallback-box textarea::placeholder{color:#444}
+  .fallback-box{width:75%;max-width:280px;display:flex;flex-direction:column;gap:10px;align-items:center;margin:0 auto}
+  .fallback-box textarea{width:100%;aspect-ratio:1;background:transparent;border:none;border-radius:0;padding:16px;font-size:15px;color:#ccc;resize:none;outline:none;font-family:inherit;text-align:center;display:flex;align-items:center}
+  .fallback-box textarea:focus{color:#fff}.fallback-box textarea::placeholder{color:#444}
   .pending-list{width:100%;display:flex;flex-direction:column;gap:8px}.pending-label{font-size:12px;color:#888;margin-bottom:2px}
   .pending-card{background:#1c1c1e;border-radius:12px;padding:10px 14px;border-left:3px solid #4a7aff}
   .pending-title{font-size:14px;font-weight:500}.pending-sub{font-size:12px;color:#888;margin-top:2px}.pending-reminder{font-size:11px;color:#4a7aff;margin-top:2px}
@@ -75,8 +57,8 @@
   .btn{border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:500;color:#fff;cursor:pointer;transition:opacity .2s}.btn:active{opacity:.8}
   .btn-primary{background:#4a7aff}.btn-secondary{background:#555}.btn-sm{padding:6px 14px;font-size:12px}
   .btn-google{background:#fff;color:#333;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:500;border:1px solid #ddd}.btn-google:active{background:#f0f0f0}
-  .settings-title{font-size:16px;font-weight:500;margin-bottom:4px}
-  .settings-section-title{font-size:13px;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+  .settings-title{font-size:18px;font-weight:600;margin-bottom:8px}
+  .settings-section-title{font-size:12px;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
   .setting-row{display:flex;justify-content:space-between;align-items:center;background:#1c1c1e;border-radius:12px;padding:14px 16px}
   .setting-block{background:#1c1c1e;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
   .setting-label{font-size:14px}.setting-desc{font-size:12px;color:#666;margin-top:2px}
@@ -84,8 +66,40 @@
   .toggle.on{background:#4a7aff}.toggle.off{background:#3a3a3c}
   .toggle-knob{width:22px;height:22px;border-radius:50%;background:#fff;position:absolute;top:2px;transition:left .2s;pointer-events:none}
   .toggle.on .toggle-knob{left:20px}.toggle.off .toggle-knob{left:2px}
+  .slider-row{display:flex;align-items:center;gap:12px}.slider-row input[type="range"]{flex:1;accent-color:#4a7aff}
+  .slider-value{min-width:55px;text-align:right;font-size:14px;font-weight:500}
+  .divider{height:1px;background:#2c2c2e;margin:10px 0}
+ 
+  /* Nav button to sub-pages */
+  .nav-btn{background:#1c1c1e;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;border:none;width:100%;color:#fff;font-size:14px;text-align:left;transition:background .15s}
+  .nav-btn:active{background:#2c2c2e}
+  .nav-btn-left{display:flex;flex-direction:column;gap:2px}
+  .nav-btn-right{display:flex;align-items:center;gap:6px}
+  .nav-btn-sub{font-size:12px;color:#666}
+  .badge{font-size:10px;padding:2px 8px;border-radius:6px;font-weight:500}
+  .badge-green{background:#0a2a0a;color:#34a853;border:1px solid #1a3a1a}
+  .badge-gray{background:#2a2a2a;color:#888;border:1px solid #3a3a3a}
+  .badge-count{background:#2a2a2e;color:#888;font-size:11px;padding:2px 8px;border-radius:8px}
+  .chevron{width:16px;height:16px;color:#555}
+ 
+  /* Sub-page header */
+  .sub-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .back-btn{background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center}
+  .back-btn svg{width:28px;height:28px;color:#4a7aff}
+  .sub-title{font-size:18px;font-weight:600}
+ 
+  /* Dropdown / collapsible */
+  .dropdown-header{background:#1c1c1e;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;border:none;width:100%;color:#fff;font-size:14px;text-align:left}
+  .dropdown-header:active{background:#2c2c2e}
+  .dropdown-arrow{transition:transform .3s ease;color:#666}
+  .dropdown-arrow.open{transform:rotate(180deg)}
+  .dropdown-body{max-height:0;overflow:hidden;transition:max-height .35s ease,opacity .25s ease;opacity:0}
+  .dropdown-body.open{max-height:500px;opacity:1}
+  .dropdown-inner{padding:12px 0;display:flex;flex-direction:column;gap:10px}
+ 
+  /* Calendar sub-page */
   .cal-selector{display:flex;gap:8px}
-  .cal-option{flex:1;padding:10px 8px;background:#2c2c2e;border:2px solid transparent;border-radius:10px;cursor:pointer;text-align:center;transition:all .2s}
+  .cal-option{flex:1;padding:12px 8px;background:#2c2c2e;border:2px solid transparent;border-radius:12px;cursor:pointer;text-align:center;transition:all .2s}
   .cal-option.active{border-color:#4a7aff;background:#1a2a4a}
   .cal-option-label{font-size:12px;color:#aaa;margin-top:4px}.cal-option.active .cal-option-label{color:#fff}
   .google-account-box{background:#1a2a1a;border:1px solid #2a4a2a;border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:space-between}
@@ -93,102 +107,146 @@
   .google-avatar{width:32px;height:32px;border-radius:50%;background:#34a853;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500}
   .check-row{display:flex;align-items:center;gap:8px;margin-top:4px}
   .check-result{font-size:12px;flex:1}.check-result.ok{color:#34a853}.check-result.fail{color:#e24b4a}.check-result.wait{color:#4a7aff}
-  .slider-row{display:flex;align-items:center;gap:12px}.slider-row input[type="range"]{flex:1;accent-color:#4a7aff}
-  .slider-value{min-width:55px;text-align:right;font-size:14px;font-weight:500}
-  .divider{height:1px;background:#2c2c2e;margin:8px 0}
+ 
   .settings-info{font-size:12px;color:#555;line-height:1.5}
   .mic-permission-banner{width:100%;background:#1c1c1e;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;align-items:center}
   .mic-permission-banner p{font-size:13px;color:#888;text-align:center;line-height:1.5}
   .setup-banner{width:100%;background:#2a1a0a;border:1px solid #4a3520;border-radius:12px;padding:14px;text-align:center}
   .setup-banner p{font-size:13px;color:#cca050;line-height:1.5;margin-bottom:8px}
-  .ki-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-  .ki-back{background:none;border:none;color:#4a7aff;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:4px}
-  .ki-add{width:36px;height:36px;border-radius:50%;background:#4a7aff;border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
   .ki-card{background:#1c1c1e;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
   .ki-card-text{font-size:14px;flex:1;min-width:0;line-height:1.4}
   .ki-card-actions{display:flex;gap:8px;margin-left:8px;flex-shrink:0}
   .ki-empty{text-align:center;color:#555;padding:60px 20px;font-size:14px;line-height:1.6}
   .ki-input-row{display:flex;gap:8px;margin-bottom:8px}
   .ki-input-row input{flex:1}
-  .kerninfo-btn{background:#1c1c1e;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;border:none;width:100%;color:#fff;font-size:14px;text-align:left}
-  .kerninfo-btn:active{background:#2c2c2e}
-  .kerninfo-count{font-size:12px;color:#888;margin-left:8px}
+  .ki-add{width:36px;height:36px;border-radius:50%;background:#4a7aff;border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
- 
-<!-- No header title - nav is at top -->
 <div class="nav">
   <button class="nav-tab active" data-tab="aufnahme">Aufnahme</button>
   <button class="nav-tab" data-tab="termine">Termine</button>
   <button class="nav-tab settings-tab" data-tab="settings">⚙</button>
 </div>
- 
 <div class="content">
+  <!-- AUFNAHME -->
   <div id="tab-aufnahme" class="tab-content active">
     <div class="aufnahme">
       <div class="setup-banner" id="setup-banner" style="display:none"><p>Bitte richte die Verbindungen in den Einstellungen (⚙) ein.</p><button class="btn btn-primary" onclick="swTab('settings')">Zu den Einstellungen</button></div>
       <div class="mic-permission-banner" id="mic-permission-banner" style="display:none"><p>Die App braucht Zugriff auf dein Mikrofon.</p><button class="btn btn-primary" onclick="reqMic()">Mikrofon erlauben</button></div>
       <div class="aufnahme-text" id="aufnahme-text">Tippe auf das Mikrofon
 und erzähl mir von deinem Termin</div>
- 
-      <!-- Mic button with glow + waves -->
       <div class="mic-wrap">
         <div class="mic-glow" id="mic-glow"></div>
-        <div class="wave-wrap hidden" id="wave-wrap">
-          <div class="wave-ring"></div>
-          <div class="wave-ring"></div>
-          <div class="wave-ring"></div>
-        </div>
+        <div class="wave-wrap hidden" id="wave-wrap"><div class="wave-ring"></div><div class="wave-ring"></div><div class="wave-ring"></div></div>
         <button class="mic-btn" id="mic-btn" onclick="micClick()">
           <svg id="mic-icon" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="1" width="6" height="11" rx="3"/><path d="M19 10v1a7 7 0 01-14 0v-1"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
           <svg id="stop-icon" width="38" height="38" viewBox="0 0 24 24" fill="#fff" style="display:none"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
         </button>
       </div>
- 
       <div class="status fade-in" id="status">Bereit</div>
-      <div class="transcript-box" id="transcript-box" style="display:none"><div class="transcript-label">Erkannter Text:</div><div id="transcript-text"></div></div>
+      <div class="transcript-box" id="transcript-box" style="display:none"><div class="transcript-label"></div><div id="transcript-text"></div></div>
       <div class="fallback-box" id="fallback-box" style="display:none"><textarea id="fallback-textarea" placeholder="Text eingeben..."></textarea><button class="btn btn-primary" onclick="submitFB()">Termin erkennen</button></div>
       <div class="pending-list" id="pending-list" style="display:none"><div class="pending-label">Erkannte Termine:</div><div id="pending-cards"></div><div class="btn-row"><button class="btn btn-primary" onclick="confirmP()">Speichern</button><button class="btn btn-secondary" onclick="rejectP()">Verwerfen</button></div></div>
     </div>
   </div>
+ 
+  <!-- TERMINE -->
   <div id="tab-termine" class="tab-content"><div class="termine-list" id="termine-list"></div></div>
+ 
+  <!-- SETTINGS -->
   <div id="tab-settings" class="tab-content">
-    <div style="display:flex;flex-direction:column;gap:16px;padding-top:8px;">
+    <div style="display:flex;flex-direction:column;gap:14px;padding-top:8px;">
       <div class="settings-title">Einstellungen</div>
-      <div class="settings-section-title">Verhalten</div>
-      <div class="setting-row"><div><div class="setting-label">Termine vorher bestätigen</div><div class="setting-desc">Zeigt erkannte Termine zur Bestätigung</div></div><button class="toggle on" id="toggle-confirm" onclick="togS('confirmBefore')"><div class="toggle-knob"></div></button></div>
-      <div class="setting-row"><div><div class="setting-label">Termine vorlesen</div><div class="setting-desc">Liest die wichtigsten Details vor</div></div><button class="toggle off" id="toggle-readback" onclick="togS('readBack')"><div class="toggle-knob"></div></button></div>
-      <div class="setting-block"><div class="setting-label">Standard-Erinnerung</div><div class="setting-desc">Wenn keine Fahrtzeit erkannt wird.</div><div class="slider-row"><input type="range" id="slider-rem" min="5" max="120" step="5" value="15" oninput="updSlider()"><span class="slider-value" id="slider-val">15 Min</span></div></div>
+ 
+      <!-- Toggles -->
+      <div class="setting-row"><div><div class="setting-label">Termine bestätigen</div><div class="setting-desc">Vor dem Speichern bestätigen</div></div><button class="toggle on" id="toggle-confirm" onclick="togS('confirmBefore')"><div class="toggle-knob"></div></button></div>
+      <div class="setting-row"><div><div class="setting-label">Termine vorlesen</div><div class="setting-desc">Liest die Details vor</div></div><button class="toggle off" id="toggle-readback" onclick="togS('readBack')"><div class="toggle-knob"></div></button></div>
+      <div class="setting-block"><div class="setting-label">Standard-Erinnerung</div><div class="slider-row"><input type="range" id="slider-rem" min="5" max="120" step="5" value="15" oninput="updSlider()"><span class="slider-value" id="slider-val">15 Min</span></div></div>
+ 
       <div class="divider"></div>
-      <div class="settings-section-title">Persönliches</div>
-      <button class="kerninfo-btn" onclick="swTab('kerninfos')"><div><div style="font-weight:500;">Kerninfos</div><div style="font-size:12px;color:#666;margin-top:2px;">Personen, Wohnort, Tagesablauf</div></div><div style="display:flex;align-items:center;gap:4px;"><span class="kerninfo-count" id="ki-count">0</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div></button>
+ 
+      <!-- Kerninfos nav button -->
+      <button class="nav-btn" onclick="swTab('kerninfos')">
+        <div class="nav-btn-left"><div style="font-weight:500;">Kerninfos</div><div class="nav-btn-sub">Personen, Orte, Tagesablauf</div></div>
+        <div class="nav-btn-right"><span class="badge-count" id="ki-count">0</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </button>
+ 
+      <!-- Kalender nav button -->
+      <button class="nav-btn" onclick="swTab('kalender')">
+        <div class="nav-btn-left"><div style="font-weight:500;">Kalender</div><div class="nav-btn-sub">Verbindung & Auswahl</div></div>
+        <div class="nav-btn-right"><span class="badge" id="cal-badge">–</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </button>
+ 
       <div class="divider"></div>
-      <div class="settings-section-title">Kalender-Modus</div>
-      <div style="background:#1c1c1e;border-radius:12px;padding:14px 16px;"><div class="cal-selector">
-        <div class="cal-option" id="cal-google" onclick="setCal('google')"><svg width="28" height="28" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#34A853" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#FBBC05" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><div class="cal-option-label">Google Kalender<br><span style="font-size:10px;color:#34a853;">Automatisch</span></div></div>
-        <div class="cal-option" id="cal-apple" onclick="setCal('apple')"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><div class="cal-option-label">Apple Kalender<br><span style="font-size:10px;color:#888;">.ics Export</span></div></div>
-      </div></div>
-      <div class="divider"></div>
-      <div class="settings-section-title">Google Kalender</div>
-      <div class="setting-block">
-        <div id="g-out"><div class="setting-label" style="margin-bottom:6px;">Mit Google anmelden</div><button class="btn btn-google" onclick="gLogin()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#34A853" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#FBBC05" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Mit Google anmelden</button></div>
-        <div id="g-in" style="display:none;"><div class="google-account-box"><div class="google-account-info"><div class="google-avatar" id="g-av">?</div><div><div style="font-size:13px;font-weight:500;" id="g-nm">–</div><div style="font-size:11px;color:#888;" id="g-em">–</div></div></div><button class="btn btn-secondary btn-sm" onclick="gOut()">Abmelden</button></div></div>
+ 
+      <!-- KI-Verbindung Dropdown -->
+      <div>
+        <button class="dropdown-header" onclick="toggleDD('ki-dd')">
+          <div style="display:flex;flex-direction:column;gap:2px;"><div style="font-weight:500;">KI-Verbindung</div><div style="font-size:12px;color:#666;">API-Key & Worker</div></div>
+          <svg class="dropdown-arrow" id="ki-dd-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dropdown-body" id="ki-dd">
+          <div class="dropdown-inner">
+            <div class="setting-block"><div class="setting-label">Anthropic API-Key</div><input type="password" id="in-key" placeholder="sk-ant-..." oninput="saveConn()"><div class="check-row"><button class="btn btn-secondary btn-sm" onclick="ckKey()">Prüfen</button><span class="check-result" id="ck-key">–</span></div></div>
+            <div class="setting-block"><div class="setting-label">Worker-URL</div><input type="url" id="in-wkr" placeholder="https://termin-proxy.xxx.workers.dev" oninput="saveConn()"><div class="check-row"><button class="btn btn-secondary btn-sm" onclick="ckWkr()">Prüfen</button><span class="check-result" id="ck-wkr">–</span></div></div>
+          </div>
+        </div>
       </div>
-      <div class="setting-block"><div class="setting-label">Google Client-ID</div><input type="text" id="in-gcid" placeholder="xxxxxxxx.apps.googleusercontent.com" oninput="saveConn()"><div class="check-row"><button class="btn btn-secondary btn-sm" onclick="ckGcid()">Prüfen</button><span class="check-result" id="ck-gcid">–</span></div></div>
-      <div class="divider"></div>
-      <div class="settings-section-title">KI-Verbindung</div>
-      <div class="setting-block"><div class="setting-label">Anthropic API-Key</div><input type="password" id="in-key" placeholder="sk-ant-..." oninput="saveConn()"><div class="check-row"><button class="btn btn-secondary btn-sm" onclick="ckKey()">Prüfen</button><span class="check-result" id="ck-key">–</span></div></div>
-      <div class="setting-block"><div class="setting-label">Worker-URL</div><input type="url" id="in-wkr" placeholder="https://termin-proxy.xxx.workers.dev" oninput="saveConn()"><div class="check-row"><button class="btn btn-secondary btn-sm" onclick="ckWkr()">Prüfen</button><span class="check-result" id="ck-wkr">–</span></div></div>
     </div>
   </div>
+ 
+  <!-- KERNINFOS SUB-PAGE -->
   <div id="tab-kerninfos" class="tab-content">
-    <div class="ki-header"><button class="ki-back" onclick="swTab('settings')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Zurück</button><div style="font-size:16px;font-weight:500;">Kerninfos</div><button class="ki-add" onclick="addKI()">+</button></div>
-    <div style="font-size:12px;color:#666;margin-bottom:12px;line-height:1.4;">Persönliche Infos die die App immer berücksichtigt.</div>
+    <div class="sub-header">
+      <button class="back-btn" onclick="swTab('settings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="sub-title">Kerninfos</div>
+      <div style="flex:1"></div>
+      <button class="ki-add" onclick="addKI()">+</button>
+    </div>
+    <div style="font-size:12px;color:#555;margin-bottom:12px;">Persönliche Infos die immer berücksichtigt werden.</div>
     <div id="ki-new" style="display:none;margin-bottom:12px;"><div class="ki-input-row"><input type="text" id="ki-input" placeholder="z.B. Wohne in Cloppenburg"><button class="btn btn-primary btn-sm" onclick="saveNewKI()">OK</button><button class="btn btn-secondary btn-sm" onclick="cancelKI()">✕</button></div></div>
     <div id="ki-list"></div>
   </div>
+ 
+  <!-- KALENDER SUB-PAGE -->
+  <div id="tab-kalender" class="tab-content">
+    <div class="sub-header">
+      <button class="back-btn" onclick="swTab('settings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="sub-title">Kalender</div>
+    </div>
+ 
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="settings-section-title">Kalender auswählen</div>
+      <div class="cal-selector">
+        <div class="cal-option" id="cal-google" onclick="setCal('google')"><svg width="28" height="28" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#34A853" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#FBBC05" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><div class="cal-option-label">Google Kalender<br><span style="font-size:10px;color:#34a853;">Automatisch</span></div></div>
+        <div class="cal-option" id="cal-apple" onclick="setCal('apple')"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><div class="cal-option-label">Apple Kalender<br><span style="font-size:10px;color:#888;">.ics Export</span></div></div>
+      </div>
+ 
+      <div class="divider"></div>
+      <div class="settings-section-title">Google-Konto</div>
+ 
+      <div class="setting-block">
+        <div id="g-out"><button class="btn btn-google" onclick="gLogin()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#34A853" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#FBBC05" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>Mit Google anmelden</button></div>
+        <div id="g-in" style="display:none;"><div class="google-account-box"><div class="google-account-info"><div class="google-avatar" id="g-av">?</div><div><div style="font-size:13px;font-weight:500;" id="g-nm">–</div><div style="font-size:11px;color:#888;" id="g-em">–</div></div></div><button class="btn btn-secondary btn-sm" onclick="gOut()">Abmelden</button></div></div>
+      </div>
+ 
+      <!-- Google Client-ID dropdown -->
+      <div>
+        <button class="dropdown-header" onclick="toggleDD('gcid-dd')">
+          <div style="font-size:13px;color:#888;">Google Client-ID</div>
+          <svg class="dropdown-arrow" id="gcid-dd-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="dropdown-body" id="gcid-dd">
+          <div class="dropdown-inner">
+            <div class="setting-block"><input type="text" id="in-gcid" placeholder="xxxxxxxx.apps.googleusercontent.com" oninput="saveConn()"><div class="check-row"><button class="btn btn-secondary btn-sm" onclick="ckGcid()">Prüfen</button><span class="check-result" id="ck-gcid">–</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+ 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
 let termine=JSON.parse(localStorage.getItem('termine')||'[]'),pend=[],isRec=false,rec=null,ts='',fts='';
@@ -201,27 +259,33 @@ if(typeof S.kerninfos==='string'&&S.kerninfos){S.kerninfos=S.kerninfos.split('\n
 let micOK=null,spOK=!!(window.SpeechRecognition||window.webkitSpeechRecognition);
 let gTk=localStorage.getItem('googleAccessToken')||'',gEx=parseInt(localStorage.getItem('googleTokenExpiry')||'0'),gNm=localStorage.getItem('googleUserName')||'',gEm=localStorage.getItem('googleUserEmail')||'',tCl=null,ttsU=false,kiEd=-1;
  
-document.addEventListener('DOMContentLoaded',()=>{loadAll();initUI();chkMic();chkSetup();updG();updKIc();});
+document.addEventListener('DOMContentLoaded',()=>{loadAll();initUI();chkMic();chkSetup();updG();updKIc();updCalBadge();});
 document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>swTab(t.dataset.tab)));
+ 
 function swTab(n){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>{t.classList.remove('active');t.style.opacity='0';});const nt=document.querySelector(`.nav-tab[data-tab="${n}"]`);if(nt)nt.classList.add('active');const tab=document.getElementById('tab-'+n);tab.classList.add('active');requestAnimationFrame(()=>{tab.style.opacity='1';});if(n==='termine')renT();if(n==='aufnahme')chkSetup();if(n==='kerninfos')renKI();}
 function chkSetup(){document.getElementById('setup-banner').style.display=(!S.apiKey||!S.workerUrl)?'block':'none';}
+ 
+function toggleDD(id){const body=document.getElementById(id),arrow=document.getElementById(id+'-arrow');body.classList.toggle('open');arrow.classList.toggle('open');}
+ 
+function updCalBadge(){const el=document.getElementById('cal-badge');const gOk=gTk&&Date.now()<gEx;if(S.calendar==='google'&&gOk){el.textContent='Google verbunden';el.className='badge badge-green';}else if(S.calendar==='google'){el.textContent='Google';el.className='badge badge-gray';}else{el.textContent='Apple';el.className='badge badge-gray';}}
+ 
 function unlkTTS(){if(ttsU)return;const u=new SpeechSynthesisUtterance('');u.volume=0;speechSynthesis.speak(u);ttsU=true;}
 function speak(t){if(!('speechSynthesis'in window)||!S.readBack)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=1;u.volume=1;speechSynthesis.speak(u);}
 function micClick(){unlkTTS();if(!S.apiKey||!S.workerUrl){swTab('settings');return;}if(isRec)stopR();else startR();}
  
 function initGA(){if(!S.googleClientId||typeof google==='undefined')return;tCl=google.accounts.oauth2.initTokenClient({client_id:S.googleClientId,scope:'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',callback:hGT});}
 function gLogin(){if(!S.googleClientId){alert('Erst Google Client-ID eingeben.');return;}if(!tCl)initGA();if(!tCl){alert('Google nicht geladen.');return;}tCl.requestAccessToken();}
-async function hGT(r){if(r.error){alert('Fehler: '+(r.error_description||r.error));return;}gTk=r.access_token;gEx=Date.now()+(r.expires_in*1000);localStorage.setItem('googleAccessToken',gTk);localStorage.setItem('googleTokenExpiry',gEx.toString());try{const res=await fetch('https://www.googleapis.com/oauth2/v2/userinfo',{headers:{'Authorization':'Bearer '+gTk}});const d=await res.json();gNm=d.name||d.email||'User';gEm=d.email||'';localStorage.setItem('googleUserName',gNm);localStorage.setItem('googleUserEmail',gEm);}catch(e){}updG();}
-function gOut(){if(gTk&&typeof google!=='undefined')try{google.accounts.oauth2.revoke(gTk);}catch(e){}gTk='';gEx=0;gNm='';gEm='';['googleAccessToken','googleTokenExpiry','googleUserName','googleUserEmail'].forEach(k=>localStorage.removeItem(k));updG();}
+async function hGT(r){if(r.error){alert('Fehler: '+(r.error_description||r.error));return;}gTk=r.access_token;gEx=Date.now()+(r.expires_in*1000);localStorage.setItem('googleAccessToken',gTk);localStorage.setItem('googleTokenExpiry',gEx.toString());try{const res=await fetch('https://www.googleapis.com/oauth2/v2/userinfo',{headers:{'Authorization':'Bearer '+gTk}});const d=await res.json();gNm=d.name||d.email||'User';gEm=d.email||'';localStorage.setItem('googleUserName',gNm);localStorage.setItem('googleUserEmail',gEm);}catch(e){}updG();updCalBadge();}
+function gOut(){if(gTk&&typeof google!=='undefined')try{google.accounts.oauth2.revoke(gTk);}catch(e){}gTk='';gEx=0;gNm='';gEm='';['googleAccessToken','googleTokenExpiry','googleUserName','googleUserEmail'].forEach(k=>localStorage.removeItem(k));updG();updCalBadge();}
 function updG(){const ok=gTk&&Date.now()<gEx;document.getElementById('g-out').style.display=ok?'none':'block';document.getElementById('g-in').style.display=ok?'block':'none';if(ok){document.getElementById('g-nm').textContent=gNm;document.getElementById('g-em').textContent=gEm;document.getElementById('g-av').textContent=(gNm||'?')[0].toUpperCase();}}
 async function ensGT(){if(!gTk||Date.now()>=gEx)return new Promise((res,rej)=>{if(!tCl)initGA();if(!tCl){rej(new Error('Google n/a'));return;}tCl.callback=r=>{hGT(r);r.error?rej(new Error(r.error)):res();};tCl.requestAccessToken();});}
 async function gCr(t){await ensGT();const s=new Date(t.datum+'T'+t.uhrzeit+':00'),dur=t.dauer||60,e=new Date(s.getTime()+dur*60000),tz=Intl.DateTimeFormat().resolvedOptions().timeZone;const body={summary:t.titel,location:t.ort||undefined,description:t.notiz||undefined,start:{dateTime:s.toISOString(),timeZone:tz},end:{dateTime:e.toISOString(),timeZone:tz},reminders:{useDefault:false,overrides:[{method:'popup',minutes:t.erinnerung||S.defaultReminder}]}};if(t.wiederholung)body.recurrence=[t.wiederholung];const r=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events',{method:'POST',headers:{'Authorization':'Bearer '+gTk,'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error(r.status);const ev=await r.json();if(t.vorabend){const va=new Date(s);va.setDate(va.getDate()-1);va.setHours(20,0,0,0);await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events',{method:'POST',headers:{'Authorization':'Bearer '+gTk,'Content-Type':'application/json'},body:JSON.stringify({summary:'Morgen: '+t.titel,start:{dateTime:va.toISOString(),timeZone:tz},end:{dateTime:new Date(va.getTime()+900000).toISOString(),timeZone:tz},reminders:{useDefault:false,overrides:[{method:'popup',minutes:0}]}})});}return ev.id;}
 async function gUp(t){if(!t.gid)return;await ensGT();const s=new Date(t.datum+'T'+t.uhrzeit+':00'),dur=t.dauer||60,e=new Date(s.getTime()+dur*60000),tz=Intl.DateTimeFormat().resolvedOptions().timeZone;await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events/'+t.gid,{method:'PUT',headers:{'Authorization':'Bearer '+gTk,'Content-Type':'application/json'},body:JSON.stringify({summary:t.titel,location:t.ort||undefined,description:t.notiz||undefined,start:{dateTime:s.toISOString(),timeZone:tz},end:{dateTime:e.toISOString(),timeZone:tz},reminders:{useDefault:false,overrides:[{method:'popup',minutes:t.erinnerung||S.defaultReminder}]}})});}
 async function gDel(t){if(!t.gid)return;await ensGT();await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events/'+t.gid,{method:'DELETE',headers:{'Authorization':'Bearer '+gTk}});}
  
-function ckKey(){const el=document.getElementById('ck-key'),k=S.apiKey;el.textContent=!k?'Kein Key':!k.startsWith('sk-')?'Muss mit sk- beginnen':'Format OK ✓';el.className='check-result '+(k&&k.startsWith('sk-')?'ok':'fail');}
+function ckKey(){const el=document.getElementById('ck-key'),k=S.apiKey;el.textContent=!k?'Kein Key':!k.startsWith('sk-')?'Muss mit sk- beginnen':'OK ✓';el.className='check-result '+(k&&k.startsWith('sk-')?'ok':'fail');}
 async function ckWkr(){const el=document.getElementById('ck-wkr'),u=S.workerUrl;if(!u||!u.startsWith('https://')){el.textContent=u?'https:// fehlt':'Keine URL';el.className='check-result fail';return;}el.textContent='Teste...';el.className='check-result wait';try{const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({apiKey:S.apiKey||'test',model:'claude-sonnet-4-20250514',max_tokens:10,system:'Sag OK',messages:[{role:'user',content:'Test'}]})});const d=await r.json();el.textContent=d.content?'OK ✓':'API: '+(d.error?.message||'Fehler');el.className=d.content?'check-result ok':'check-result fail';}catch(e){el.textContent='Nicht erreichbar';el.className='check-result fail';}}
-function ckGcid(){const el=document.getElementById('ck-gcid'),id=S.googleClientId;if(!id||!id.includes('.apps.googleusercontent.com')){el.textContent=id?'Muss auf .apps.googleusercontent.com enden':'Keine ID';el.className='check-result fail';return;}if(typeof google==='undefined'){el.textContent='SDK lädt...';el.className='check-result wait';return;}try{tCl=google.accounts.oauth2.initTokenClient({client_id:id,scope:'https://www.googleapis.com/auth/calendar.events',callback:()=>{}});el.textContent='OK ✓';el.className='check-result ok';}catch(e){el.textContent='Fehler';el.className='check-result fail';}}
+function ckGcid(){const el=document.getElementById('ck-gcid'),id=S.googleClientId;if(!id||!id.includes('.apps.googleusercontent.com')){el.textContent=id?'Format falsch':'Keine ID';el.className='check-result fail';return;}if(typeof google==='undefined'){el.textContent='SDK lädt...';el.className='check-result wait';return;}try{tCl=google.accounts.oauth2.initTokenClient({client_id:id,scope:'https://www.googleapis.com/auth/calendar.events',callback:()=>{}});el.textContent='OK ✓';el.className='check-result ok';}catch(e){el.textContent='Fehler';el.className='check-result fail';}}
  
 async function chkMic(){if(!spOK){showFB('Spracherkennung nicht unterstützt.');return;}if(navigator.permissions?.query){try{const r=await navigator.permissions.query({name:'microphone'});if(r.state==='granted'){micOK=true;hideB();}else if(r.state==='denied'){micOK=false;showFB('Blockiert.');}else showB();r.addEventListener('change',()=>{if(r.state==='granted'){micOK=true;hideB();}else if(r.state==='denied'){micOK=false;showFB('Blockiert.');}});}catch(e){}}}
 async function reqMic(){unlkTTS();try{const s=await navigator.mediaDevices.getUserMedia({audio:true});s.getTracks().forEach(t=>t.stop());micOK=true;hideB();setSt('Mikrofon erlaubt!',false);}catch(e){micOK=false;showFB('Verweigert.');}}
@@ -234,7 +298,7 @@ function saveConn(){S.apiKey=document.getElementById('in-key').value.trim();S.wo
 function updSlider(){const v=parseInt(document.getElementById('slider-rem').value);S.defaultReminder=v;saveS();document.getElementById('slider-val').textContent=v>=60?Math.floor(v/60)+'h'+(v%60?' '+v%60+'m':''):v+' Min';}
 function initUI(){document.getElementById('toggle-confirm').className='toggle '+(S.confirmBefore?'on':'off');document.getElementById('toggle-readback').className='toggle '+(S.readBack?'on':'off');document.getElementById('cal-apple').classList.toggle('active',S.calendar==='apple');document.getElementById('cal-google').classList.toggle('active',S.calendar==='google');}
 function togS(k){S[k]=!S[k];saveS();initUI();}
-function setCal(t){S.calendar=t;saveS();initUI();}
+function setCal(t){S.calendar=t;saveS();initUI();updCalBadge();}
 function saveS(){localStorage.setItem('settings',JSON.stringify(S));}
  
 function updKIc(){document.getElementById('ki-count').textContent=S.kerninfos.length;}
@@ -248,11 +312,7 @@ function renKI(){const el=document.getElementById('ki-list');if(!S.kerninfos.len
 async function startR(){if(!spOK){showFB('Nicht unterstützt.');return;}if(micOK===false){showFB('Blockiert.');return;}if(micOK===null){try{const s=await navigator.mediaDevices.getUserMedia({audio:true});s.getTracks().forEach(t=>t.stop());micOK=true;hideB();}catch(e){micOK=false;showFB('Verweigert.');return;}}const SR=window.SpeechRecognition||window.webkitSpeechRecognition;rec=new SR();rec.lang='de-DE';rec.continuous=true;rec.interimResults=true;fts='';ts='';rec.onresult=e=>{let i='';for(let x=e.resultIndex;x<e.results.length;x++){if(e.results[x].isFinal)fts+=e.results[x][0].transcript+' ';else i=e.results[x][0].transcript;}ts=fts+i;showTs(ts);};rec.onerror=e=>{if(e.error==='not-allowed'||e.error==='service-not-allowed'){micOK=false;isRec=false;updMB();showFB('Blockiert.');}else if(e.error==='network'){setSt('Netzwerkfehler.',false,true);isRec=false;updMB();}else if(e.error!=='no-speech')setSt('Fehler: '+e.error,false,true);};rec.onend=()=>{if(isRec)try{rec.start();}catch(e){}};try{rec.start();isRec=true;updMB();setSt('Ich höre zu...',false);document.getElementById('aufnahme-text').textContent='Ich höre zu...';document.getElementById('pending-list').style.display='none';document.getElementById('fallback-box').style.display='none';}catch(e){showFB('Fehler.');}}
 async function stopR(){isRec=false;if(rec){rec.onend=null;try{rec.stop();}catch(e){}rec=null;}updMB();document.getElementById('aufnahme-text').textContent='Tippe auf das Mikrofon\nund erzähl mir von deinem Termin';if(ts.trim()){setSt('Verarbeite...',true);await doAI(ts.trim());}else setSt('Kein Text erkannt.',false);}
 async function submitFB(){unlkTTS();if(!S.apiKey||!S.workerUrl){swTab('settings');return;}const t=document.getElementById('fallback-textarea').value.trim();if(!t){setSt('Bitte Text eingeben.',false,true);return;}setSt('Verarbeite...',true);await doAI(t);document.getElementById('fallback-textarea').value='';}
- 
-function updMB(){const b=document.getElementById('mic-btn'),gl=document.getElementById('mic-glow'),wv=document.getElementById('wave-wrap');
-  if(isRec){b.classList.add('recording');b.classList.remove('disabled');document.getElementById('mic-icon').style.display='none';document.getElementById('stop-icon').style.display='block';gl.style.display='none';wv.classList.remove('hidden');}
-  else{b.classList.remove('recording');document.getElementById('mic-icon').style.display='block';document.getElementById('stop-icon').style.display='none';gl.style.display='';wv.classList.add('hidden');}}
- 
+function updMB(){const b=document.getElementById('mic-btn'),gl=document.getElementById('mic-glow'),wv=document.getElementById('wave-wrap');if(isRec){b.classList.add('recording');b.classList.remove('disabled');document.getElementById('mic-icon').style.display='none';document.getElementById('stop-icon').style.display='block';gl.style.display='none';wv.classList.remove('hidden');}else{b.classList.remove('recording');document.getElementById('mic-icon').style.display='block';document.getElementById('stop-icon').style.display='none';gl.style.display='';wv.classList.add('hidden');}}
 function setSt(t,p,e){const el=document.getElementById('status');el.textContent=(p?'⏳ ':'')+t;el.className='status fade-in'+(p?' processing':'')+(e?' error':'');}
 function showTs(t){const b=document.getElementById('transcript-box');if(t){b.style.display='block';document.getElementById('transcript-text').textContent=t;}else b.style.display='none';}
  
@@ -291,28 +351,23 @@ Heute=${dn[now.getDay()]} (${now.getDay()}). RECHNE EXAKT:
 "in 30 Min"→${timeStr}+30min. "gleich"→+15min.
  
 === FAHRTZEITEN ===
-1. Kerninfos prüfen (Person/Ort mit Fahrtzeit)→nutzen!
-2. Sonst: Geografie schätzen, GROSSZÜGIG (+10 Min lieber zu viel). Wohnort aus Kerninfos als Start.
-3. erinnerung=Fahrtzeit+5min Puffer
-4. Explizite Angabe überschreibt.
-5. Kein Ort/Fahrt→${S.defaultReminder}
+1. Kerninfos prüfen→nutzen! 2. Sonst grob schätzen (GROSSZÜGIG +10min). 3. erinnerung=Fahrt+5min
+4. Explizit überschreibt. 5. Kein Ort→${S.defaultReminder}
  
-=== TITEL (Handy-Benachrichtigung) ===
-Kurz+nützlich. Bei Fahrt: "ORT – Los HH:MM" (Losfahrzeit=Termin minus Fahrtzeit).
-Bei Mitbringen: "Person – Ding mitnehmen". Sonst: Kernpunkt.
+=== TITEL ===
+Kurz. Bei Fahrt: "ORT – Los HH:MM". Bei Mitbringen: "Person – Ding". Sonst Kernpunkt.
  
-=== DAUER (Min) ===
+=== DAUER ===
 Arzt:30-45, Treffen:60, Meeting:60, Essen:90-120, Sport:60-90, Einkauf:45, Unklar:60
  
 === VORABEND ===
-vorabend=true wenn Termin>1 Tag entfernt (nicht heute, nicht morgen).
+true wenn >1 Tag entfernt.
  
 === WIEDERHOLUNG ===
-"jeden Montag"→"RRULE:FREQ=WEEKLY;BYDAY=MO", "jede Woche"→WEEKLY, "täglich"→DAILY, sonst null.
+"jeden Mo"→"RRULE:FREQ=WEEKLY;BYDAY=MO", "jede Woche"→WEEKLY, "täglich"→DAILY, sonst null.
  
 === VORLESEN ===
-Kurz, natürlich. Bei Fahrt: Losfahrzeit nennen. KEIN "Gespeichert"/"Verstanden".
-Uhrzeiten natürlich: "halb sieben","um drei","viertel nach".`,
+Kurz, natürlich. Losfahrzeit bei Fahrt. KEIN "Gespeichert". Uhrzeiten: "halb sieben","um drei".`,
         messages:[{role:'user',content:text}]})});
     const data=await r.json();
     if(data.error){setSt('API-Fehler: '+(data.error.message||''),false,true);return;}
@@ -346,3 +401,4 @@ setTimeout(()=>{if(S.googleClientId)initGA();},1000);
 </script>
 </body>
 </html>
+ 
