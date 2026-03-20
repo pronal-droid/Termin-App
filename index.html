@@ -321,25 +321,31 @@ async function doAI(text){
     const now=new Date(),ds=now.toISOString().split('T')[0],timeStr=now.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',hour12:false});
     const dn=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
     const ki=S.kerninfos.length?S.kerninfos.join('\n'):'Keine Kerninfos.';
+    // Pre-calculate next 14 days so AI doesn't have to do date math
+    let dateTable='';
+    for(let i=0;i<14;i++){const d=new Date(now);d.setDate(d.getDate()+i);const label=i===0?'heute':i===1?'morgen':i===2?'übermorgen':dn[d.getDay()];dateTable+=`${label} = ${dn[d.getDay()]} ${d.toISOString().split('T')[0]}\n`;}
     const r=await fetch(S.workerUrl,{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({apiKey:S.apiKey,model:'claude-sonnet-4-20250514',max_tokens:1200,
         system:`Du bist ein intelligenter Termin-Assistent.
  
 AKTUELLE ZEIT: ${timeStr} Uhr
 HEUTE: ${dn[now.getDay()]}, ${ds}
-Wochentag-Nummer: ${now.getDay()} (0=So,1=Mo,2=Di,3=Mi,4=Do,5=Fr,6=Sa)
  
+KALENDER DER NÄCHSTEN 14 TAGE (nutze diese Tabelle!):
+${dateTable}
 KERNINFOS (IMMER berücksichtigen!):
 ${ki}
  
 Antworte NUR mit JSON-Array (keine Backticks):
 [{"titel":"...","datum":"YYYY-MM-DD","uhrzeit":"HH:MM","ort":"...","notiz":"...","erinnerung":MIN,"dauer":MIN,"vorlesen":"...","vorabend":bool,"wiederholung":"RRULE:..."|null}]
  
-=== WOCHENTAGE ===
-Heute=${dn[now.getDay()]} (${now.getDay()}). RECHNE EXAKT:
-- "nächsten Montag": Ziel=1. Diff=(1-${now.getDay()}+7)%7. Wenn 0→7. Datum=heute+Diff.
-- "diesen Freitag": Ziel=5. Diff=(5-${now.getDay()}+7)%7. Wenn 0→7.
-- "morgen"=+1, "übermorgen"=+2, "am Wochenende"=nächster Samstag.
+=== WOCHENTAGE – WICHTIG ===
+NUTZE DIE TABELLE OBEN! Schlage den genannten Wochentag in der Tabelle nach und übernimm das Datum direkt.
+- "nächsten Montag" → finde "Montag" in der Tabelle → nimm das Datum. NICHT selber rechnen!
+- "am Freitag" → finde "Freitag" in der Tabelle → nimm das Datum.
+- "morgen" → siehe Tabelle bei "morgen".
+- "am Wochenende" → finde "Samstag" in der Tabelle.
+NIEMALS ein Datum verwenden das nicht in der Tabelle steht (außer bei Terminen >14 Tage, dann rechne).
  
 === TAGESZEITEN ===
 "morgens/früh"→08:00, "vormittags"→10:00, "mittags"→12:00, "nachmittags"→15:00, "abends"→19:00, "nachts"→22:00
@@ -361,7 +367,9 @@ Kurz. Bei Fahrt: "ORT – Los HH:MM". Bei Mitbringen: "Person – Ding". Sonst K
 Arzt:30-45, Treffen:60, Meeting:60, Essen:90-120, Sport:60-90, Einkauf:45, Unklar:60
  
 === VORABEND ===
-true wenn >1 Tag entfernt.
+vorabend=true wenn der Termin NICHT heute und NICHT morgen ist (also mindestens 2 Tage entfernt).
+Die Vorabend-Erinnerung kommt am ABEND VOR dem Termin um 20:00 Uhr. 
+Beispiel: Termin am Montag → Vorabend-Erinnerung am Sonntagabend 20:00.
  
 === WIEDERHOLUNG ===
 "jeden Mo"→"RRULE:FREQ=WEEKLY;BYDAY=MO", "jede Woche"→WEEKLY, "täglich"→DAILY, sonst null.
