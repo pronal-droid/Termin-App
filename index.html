@@ -255,7 +255,17 @@ let S=JSON.parse(localStorage.getItem('settings')||'{}');
 if(S.confirmBefore===undefined)S.confirmBefore=true;
 S.readBack=S.readBack||false;S.calendar=S.calendar||'google';S.apiKey=S.apiKey||'';S.workerUrl=S.workerUrl||'';S.googleClientId=S.googleClientId||'';S.defaultReminder=S.defaultReminder||15;
 S.kerninfos=S.kerninfos||[];
-if(typeof S.kerninfos==='string'&&S.kerninfos){S.kerninfos=S.kerninfos.split('\n').filter(x=>x.trim());saveS();}
+// Migrate old formats to {text,cat} objects
+if(S.kerninfos.length&&typeof S.kerninfos[0]==='string'){S.kerninfos=S.kerninfos.map(k=>({text:k,cat:autoCat(k)}));saveS();}
+if(typeof S.kerninfos==='string'&&S.kerninfos){S.kerninfos=S.kerninfos.split('\n').filter(x=>x.trim()).map(k=>({text:k,cat:autoCat(k)}));saveS();}
+ 
+const CATS={zeit:{icon:'🕐',label:'Zeiten & Routine'},person:{icon:'👥',label:'Personen'},ort:{icon:'📍',label:'Orte & Fahrtzeiten'},arbeit:{icon:'💼',label:'Arbeit'},sonst:{icon:'📝',label:'Sonstiges'}};
+function autoCat(t){const l=t.toLowerCase();
+if(/aufsteh|weck|schlafen|losfahren|feierabend|routine|morgens|abends|uhr.*auf|bett/.test(l))return'zeit';
+if(/freund|frau|mann|mama|papa|bruder|schwester|oma|opa|partner|kolleg|chef|name.*heißt|heißt/.test(l))return'person';
+if(/wohn|leb.*in|fahrt|entfernt|minuten.*fahrt|adresse|straße|fitnessstudio|gym|supermarkt/.test(l))return'ort';
+if(/arbeit|job|büro|firma|schicht|ausbildung|chef|meeting|office/.test(l))return'arbeit';
+return'sonst';}
 let micOK=null,spOK=!!(window.SpeechRecognition||window.webkitSpeechRecognition);
 let gTk=localStorage.getItem('googleAccessToken')||'',gEx=parseInt(localStorage.getItem('googleTokenExpiry')||'0'),gNm=localStorage.getItem('googleUserName')||'',gEm=localStorage.getItem('googleUserEmail')||'',tCl=null,ttsU=false,kiEd=-1;
  
@@ -270,7 +280,17 @@ function toggleDD(id){const body=document.getElementById(id),arrow=document.getE
 function updCalBadge(){const el=document.getElementById('cal-badge');const gOk=gTk&&Date.now()<gEx;if(S.calendar==='google'&&gOk){el.textContent='Google verbunden';el.className='badge badge-green';}else if(S.calendar==='google'){el.textContent='Google';el.className='badge badge-gray';}else{el.textContent='Apple';el.className='badge badge-gray';}}
  
 function unlkTTS(){if(ttsU)return;const u=new SpeechSynthesisUtterance('');u.volume=0;speechSynthesis.speak(u);ttsU=true;}
-function speak(t){if(!('speechSynthesis'in window)||!S.readBack)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=1;u.volume=1;speechSynthesis.speak(u);}
+let bestVoice=null;
+function findBestVoice(){const voices=speechSynthesis.getVoices();const de=voices.filter(v=>v.lang.startsWith('de'));if(!de.length)return null;
+// Prefer enhanced/premium voices (they have longer names or 'enhanced'/'premium' in name)
+const premium=de.filter(v=>v.name.toLowerCase().includes('enhanced')||v.name.toLowerCase().includes('premium')||v.name.toLowerCase().includes('erweitert'));
+if(premium.length)return premium[0];
+// Then prefer non-compact voices (better quality)
+const good=de.filter(v=>!v.name.toLowerCase().includes('compact'));
+if(good.length)return good[0];
+return de[0];}
+if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=()=>{bestVoice=findBestVoice();};setTimeout(()=>{bestVoice=findBestVoice();},500);}
+function speak(t){if(!('speechSynthesis'in window)||!S.readBack)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='de-DE';u.rate=1;u.volume=1;if(bestVoice)u.voice=bestVoice;speechSynthesis.speak(u);}
 function micClick(){unlkTTS();if(!S.apiKey||!S.workerUrl){swTab('settings');return;}if(isRec)stopR();else startR();}
  
 function initGA(){if(!S.googleClientId||typeof google==='undefined')return;tCl=google.accounts.oauth2.initTokenClient({client_id:S.googleClientId,scope:'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',callback:hGT});}
@@ -304,10 +324,18 @@ function saveS(){localStorage.setItem('settings',JSON.stringify(S));}
 function updKIc(){document.getElementById('ki-count').textContent=S.kerninfos.length;}
 function addKI(){kiEd=-1;document.getElementById('ki-input').value='';document.getElementById('ki-new').style.display='block';document.getElementById('ki-input').focus();}
 function cancelKI(){document.getElementById('ki-new').style.display='none';kiEd=-1;}
-function saveNewKI(){const v=document.getElementById('ki-input').value.trim();if(!v)return;if(kiEd>=0){S.kerninfos[kiEd]=v;kiEd=-1;}else S.kerninfos.push(v);saveS();document.getElementById('ki-new').style.display='none';renKI();updKIc();}
-function editKI(i){kiEd=i;document.getElementById('ki-input').value=S.kerninfos[i];document.getElementById('ki-new').style.display='block';document.getElementById('ki-input').focus();}
+function saveNewKI(){const v=document.getElementById('ki-input').value.trim();if(!v)return;if(kiEd>=0){S.kerninfos[kiEd].text=v;S.kerninfos[kiEd].cat=autoCat(v);}else S.kerninfos.push({text:v,cat:autoCat(v)});saveS();document.getElementById('ki-new').style.display='none';renKI();updKIc();}
+function editKI(i){kiEd=i;document.getElementById('ki-input').value=S.kerninfos[i].text;document.getElementById('ki-new').style.display='block';document.getElementById('ki-input').focus();}
 function delKI(i){S.kerninfos.splice(i,1);saveS();renKI();updKIc();}
-function renKI(){const el=document.getElementById('ki-list');if(!S.kerninfos.length){el.innerHTML='<div class="ki-empty">Noch keine Kerninfos.<br>Tippe + um hinzuzufügen.<br><br>Beispiele:<br>• Wohne in Cloppenburg<br>• Aufstehen 6:30, Losfahren 7:15<br>• Frieda wohnt in Barßel, 40 Min</div>';return;}el.innerHTML=S.kerninfos.map((k,i)=>`<div class="ki-card"><div class="ki-card-text">${esc(k)}</div><div class="ki-card-actions"><button class="icon-btn" onclick="editKI(${i})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a7aff" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn" onclick="delKI(${i})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e24b4a" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`).join('');}
+function renKI(){const el=document.getElementById('ki-list');if(!S.kerninfos.length){el.innerHTML='<div class="ki-empty">Noch keine Kerninfos.<br>Tippe + um hinzuzufügen.<br><br>Beispiele:<br>• Wohne in Cloppenburg<br>• Aufstehen 6:30, Losfahren 7:15<br>• Freundin Frieda, wohnt in Barßel, 40 Min<br>• Arbeit beginnt um 8:00</div>';return;}
+// Group by category
+const groups={};S.kerninfos.forEach((k,i)=>{const c=k.cat||'sonst';if(!groups[c])groups[c]=[];groups[c].push({...k,idx:i});});
+let html='';
+for(const[cat,items]of Object.entries(CATS)){if(!groups[cat])continue;
+html+=`<div style="margin-bottom:14px;"><div style="font-size:12px;color:#666;margin-bottom:6px;display:flex;align-items:center;gap:6px;">${items.icon}<span style="text-transform:uppercase;letter-spacing:1px;">${items.label}</span></div>`;
+html+=groups[cat].map(k=>`<div class="ki-card"><div class="ki-card-text">${esc(k.text)}</div><div class="ki-card-actions"><button class="icon-btn" onclick="editKI(${k.idx})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a7aff" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn" onclick="delKI(${k.idx})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e24b4a" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`).join('');
+html+='</div>';}
+el.innerHTML=html;}
  
 async function startR(){if(!spOK){showFB('Nicht unterstützt.');return;}if(micOK===false){showFB('Blockiert.');return;}if(micOK===null){try{const s=await navigator.mediaDevices.getUserMedia({audio:true});s.getTracks().forEach(t=>t.stop());micOK=true;hideB();}catch(e){micOK=false;showFB('Verweigert.');return;}}const SR=window.SpeechRecognition||window.webkitSpeechRecognition;rec=new SR();rec.lang='de-DE';rec.continuous=true;rec.interimResults=true;fts='';ts='';rec.onresult=e=>{let i='';for(let x=e.resultIndex;x<e.results.length;x++){if(e.results[x].isFinal)fts+=e.results[x][0].transcript+' ';else i=e.results[x][0].transcript;}ts=fts+i;showTs(ts);};rec.onerror=e=>{if(e.error==='not-allowed'||e.error==='service-not-allowed'){micOK=false;isRec=false;updMB();showFB('Blockiert.');}else if(e.error==='network'){setSt('Netzwerkfehler.',false,true);isRec=false;updMB();}else if(e.error!=='no-speech')setSt('Fehler: '+e.error,false,true);};rec.onend=()=>{if(isRec)try{rec.start();}catch(e){}};try{rec.start();isRec=true;updMB();setSt('Ich höre zu...',false);document.getElementById('aufnahme-text').textContent='Ich höre zu...';document.getElementById('pending-list').style.display='none';document.getElementById('fallback-box').style.display='none';}catch(e){showFB('Fehler.');}}
 async function stopR(){isRec=false;if(rec){rec.onend=null;try{rec.stop();}catch(e){}rec=null;}updMB();document.getElementById('aufnahme-text').textContent='Tippe auf das Mikrofon\nund erzähl mir von deinem Termin';if(ts.trim()){setSt('Verarbeite...',true);await doAI(ts.trim());}else setSt('Kein Text erkannt.',false);}
@@ -320,7 +348,12 @@ async function doAI(text){
   try{
     const now=new Date(),ds=now.toISOString().split('T')[0],timeStr=now.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',hour12:false});
     const dn=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
-    const ki=S.kerninfos.length?S.kerninfos.join('\n'):'Keine Kerninfos.';
+    // Build categorized kerninfos for AI
+    let kiText='';
+    if(S.kerninfos.length){const g={};S.kerninfos.forEach(k=>{const c=k.cat||'sonst';if(!g[c])g[c]=[];g[c].push(k.text);});
+    for(const[c,items]of Object.entries(g)){kiText+=`[${CATS[c]?.label||c}]: ${items.join(' | ')}\n`;}}
+    else kiText='Keine Kerninfos.';
+    const ki=kiText;
     // Pre-calculate next 14 days so AI doesn't have to do date math
     let dateTable='';
     for(let i=0;i<14;i++){const d=new Date(now);d.setDate(d.getDate()+i);const label=i===0?'heute':i===1?'morgen':i===2?'übermorgen':dn[d.getDay()];dateTable+=`${label} = ${dn[d.getDay()]} ${d.toISOString().split('T')[0]}\n`;}
